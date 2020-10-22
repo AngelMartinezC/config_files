@@ -1,0 +1,9 @@
+#!/bin/bash
+
+./configure --prefix=$HOME/path/to/cfitsio/cfitsio-3.49
+make
+make_install
+
+#To make fpack/funpack:
+make fpack
+make funpack
