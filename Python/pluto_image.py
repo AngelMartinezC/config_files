@@ -20,7 +20,7 @@ wdir = wdir.replace('\n','')
 #p = sys.argv[1]
 def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     cbar=True, title=r'Density $\rho$', vmin=None, vmax=None, Mm=True, \
-    Mmx=True, Mmy=True, cmap='viridis', figsize=(8,10), labelpad=10.0, \
+    Mmx=True, Mmy=True, cmap='jet', figsize=(8,10), labelpad=10.0, \
     cbarlabel=r'Density ($\times$10$^{10}$) [gr cm$^{-3}$]', pad=0.05, 
     dim=2, n=0, dslice='12', **kwargs):
 
