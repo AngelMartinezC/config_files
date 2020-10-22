@@ -1,3 +1,5 @@
 # config_files
-Folder to put all config files. For fun in these hard times 
-ff
+
+Folder to put all configuration files.
+
+Files in Python, c/c++, bash.
