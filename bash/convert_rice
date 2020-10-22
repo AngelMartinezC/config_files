@@ -1,0 +1,176 @@
+#!/bin/bash
+
+# Code to make things easier when manipulating fits files and also to test
+# getopts with flags.
+#
+# Angel M.
+
+
+progname=$(basename $0)
+
+usage () {
+  varout=$(cat << EOF
+  
+  Perform fz un/compression for FITS files with the Rice algorithm
+
+  Usage:  $progname  -u|p [-f filepath] [-i INPUT(.fits/.fz)]
+
+  Inputs: -u  funpack: convert fz/fits --> fits uncompressed)
+          -p  fpack: convert fits --> fits/fz compressed files
+          -f  filepath: default `pwd` where the program is called
+          -i  input file to perform conversion. Default is set to all
+              .fits/.fz files starting with hmi* on filepath
+                
+EOF
+  )
+  echo "$varout"
+}
+
+#print_usage () {
+#  echo ''
+#  echo 'Perform fz un/compression for FITS files with the Rice algorithm'
+#  echo ''
+#  echo 'Usage:  '$progname'  -u|p [-f filepath] [-i INPUT.fits/fz]'
+#  echo ''
+#  echo '  Inputs: -u   funpack (convert fz --> fits)'
+#  echo '          -p   fpack (convert fits --> fz)'
+#  echo '          -f   filepath: default `pwd`'
+#  echo '          -i   input file to convert. Default all *.fits in fpath'
+#echo ''
+#}
+
+funpa=
+fpa=
+filepath=
+input=
+
+
+while getopts 'upf:i:' flag; do
+  case "${flag}" in
+    u) funpa='true' ;;
+    p) fpa='true' ;;
+    f) filepath="${OPTARG}" ;;
+    i) input="${OPTARG}" ;;
+    *) usage
+      exit 1;;
+  esac
+done
+
+if test $# -le 1
+then
+  if [[ -z $fpa ]] && [[ -z $funpa ]];
+  then
+    usage
+    exit 1
+  fi
+  if test $# -eq 0
+  then 
+    exit 0
+  fi
+fi
+
+
+# -- Avoid fpack and fupack variables to be run at the same time
+if [[ -n $fpa || -n $funpa ]];
+then
+  if [[ $funpa == $fpa  ]];
+  then
+    echo "Error: Cannot use -u and -p flags at same time"
+    usage
+    echo "Exit..."
+    exit 1
+  fi
+fi
+
+# -- Define the path
+if [[ -n $filepath ]];
+then
+  if [[ $filepath == `pwd`  ]];
+  then 
+    DATADIR=$filepath'/'
+  else
+    DATADIR=$filepath
+  fi
+elif [[ -z $filepath ]];
+then
+  DATADIR=`pwd`'/'
+fi
+
+# -- For the FUNPACK flag ---------------------------------------------- 
+if [[ -n $funpa ]];
+then
+  str2="."
+  if [[ -n $input ]];   # -- if there is input
+  then
+    str3=${input/.2./$str2} # -- Change name
+    res1=`funpack -E 1 -O $str3.temp -v $DATADIR$input`
+    # -- Next lines to ensure the output file has the right name
+    # -- It is for the output to be always fits whenever is .fz or .fits.fz
+    RENA=`perl-rename -v "s/.fits.fz.temp/.fits/g" $str3.temp` 
+    if [[ -z $RENA ]];
+    then
+      perl-rename "s/.fz.temp/.fits/g" $str3.temp
+    fi
+    # -- If the data is already uncompressed, then don't make compression
+    res2=`echo $res1 | grep "HDU number 1"`
+    if [[ -z $res2 ]]; # -- If res2 is null, then the compression was made
+    then
+      perl-rename "s/.temp//g" *
+      rm $input
+    fi
+  elif [[ -z $input ]];   # -- if there is no input
+  then
+    #perl-rename "s/.fits.fz/.fits/g" $DATADIR*
+    for i in `ls $DATADIR | grep hmi | grep fits`
+    do
+      input2=$DATADIR$i
+      str2="."
+      str3=${input2/.2./$str2}
+      res1=`funpack -E 1 -O $str3.temp -v $DATADIR$i`
+      # -- Next lines to ensure the output file has the right name
+      RENA=`perl-rename -v "s/.fits.fz/.fits/g" $str3.temp`
+      if [[ -z $RENA ]];
+      then
+        perl-rename "s/.fz/.fits/g" $str3.temp 
+      fi
+      res2=`echo $res1 | grep "HDU number 1"`
+      if [[ -z $res2 ]];
+        then
+        perl-rename "s/.temp//g" *
+        rm $DATADIR$i
+      fi
+      echo "funpack "$i
+    done
+  fi
+
+# -- For the FPACK flag -------------------------------------------------
+elif [[ -n $fpa ]];
+then
+  str2=".2.fits.fz"
+  if [[ -n $input ]];   # -- if there is input
+  then
+    # Next line works only if the file has .fits.fz extension
+    perl-rename "s/.fits.fz/.fits.fz.temp/g" $input 
+    str3=${input/.fits/$str2}
+    fpack -O $str3 -v $DATADIR$input*
+    rm $input*
+    perl-rename "s/.fz.fz/.fz/g" $str3
+  elif [[ -z $input ]];   # -- if there is no input
+  then
+    for i in `ls $DATADIR | grep hmi | grep fits`
+    do
+      perl-rename "s/.fits.fz/.fits.fz.temp/g" $DATADIR$i
+      input2=$DATADIR$i
+      str2=".2.fits.fz"
+      str3=${input2/.fits/$str2}
+      fpack -O $str3 -v $DATADIR$i*
+      #perl-rename "s/.fits/.fits.fz/g" $str3
+      rm $DATADIR$i*
+      perl-rename "s/.fz.fz/.fz/g" $str3
+    done
+  fi
+fi
+
+# Falta hacer lo mismo que se hizo en el ciclo for de funpack en el de fpack
+# para que así no sobreescriba datos (mirar si es fácil, puesto que el orden
+# de las extensiones se altera y puede no ser fácil)
