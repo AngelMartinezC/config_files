@@ -167,6 +167,7 @@ funpack_all ()
 }
 
 
+# -- To propertly compile PDF files from .tex sources
 pdf ()
 {
   filename=$(basename $1)
@@ -191,16 +192,17 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
-alias master='cd /home/angel/Documents/MASTER'
-alias masterc='cd /home/angel/Documents/MASTER/Codes'
-alias mastercc='cd /home/angel/Documents/MASTER/Codes/Charlie'
-alias mastercj='cd /home/angel/Documents/MASTER/Codes/JOBS'
-alias mastercb='cd /home/angel/Documents/MASTER/Codes/bash'
-alias mastercp='cd /home/angel/Documents/MASTER/Codes/Python'
-alias flare='cd /home/angel/IDLWorkspace/Flare'
+alias master='cd $HOME/Documents/MASTER'
+alias masterc='cd $HOME/Documents/MASTER/Codes'
+alias mastercc='cd $HOME/Documents/MASTER/Codes/Charlie'
+alias mastercj='cd $HOME/Documents/MASTER/Codes/JOBS'
+alias mastercb='cd $HOME/Documents/MASTER/Codes/bash'
+alias mastercp='cd $HOME/Documents/MASTER/Codes/Python'
+alias flare='cd $HOME/IDLWorkspace/Flare'
 alias prename='perl-rename'
 #alias ts='texstudio $1; rm *.toc'
 
+# -- Open TexStudio
 tsd ()
 {
   filename=$(basename $1)
@@ -214,51 +216,54 @@ alias pfm=pcmanfm
 
 for i in {1..69}
 do
-  alias 'f'$i='cd /home/angel/IDLWorkspace/Flare/F'$i
-  alias 'f'$i'd'='cd /home/angel/IDLWorkspace/Flare/F'$i'/HMIDoppler'
-  alias 'f'$i'dw'='cd /home/angel/IDLWorkspace/Flare/F'$i'/HMIDoppler/Work'
-  alias 'f'$i'i'='cd /home/angel/IDLWorkspace/Flare/F'$i'/HMIIntensity'
-  alias 'f'$i'iw'='cd /home/angel/IDLWorkspace/Flare/F'$i'/HMIIntensity/Work'
-  alias 'f'$i'm'='cd /home/angel/IDLWorkspace/Flare/F'$i'/HMIMagneto'
-  alias 'f'$i'mw'='cd /home/angel/IDLWorkspace/Flare/F'$i'/HMIMagneto/Work'
-  alias 'pf'$i'd'='pfm /home/angel/IDLWorkspace/Flare/F'$i'/HMIDoppler'
-  alias 'pf'$i'dw'='pfm /home/angel/IDLWorkspace/Flare/F'$i'/HMIDoppler/Work'
-  alias 'pf'$i'iw'='pfm /home/angel/IDLWorkspace/Flare/F'$i'/HMIIntensity/Work'
-  alias 'pf'$i'mw'='pfm /home/angel/IDLWorkspace/Flare/F'$i'/HMIMagneto/Work'
+  alias 'f'$i='cd $HOME/IDLWorkspace/Flare/F'$i
+  alias 'f'$i'd'='cd $HOME/IDLWorkspace/Flare/F'$i'/HMIDoppler'
+  alias 'f'$i'dw'='cd $HOME/IDLWorkspace/Flare/F'$i'/HMIDoppler/Work'
+  alias 'f'$i'i'='cd $HOME/IDLWorkspace/Flare/F'$i'/HMIIntensity'
+  alias 'f'$i'iw'='cd $HOME/IDLWorkspace/Flare/F'$i'/HMIIntensity/Work'
+  alias 'f'$i'm'='cd $HOME/IDLWorkspace/Flare/F'$i'/HMIMagneto'
+  alias 'f'$i'mw'='cd $HOME/IDLWorkspace/Flare/F'$i'/HMIMagneto/Work'
+  alias 'pf'$i'd'='pfm $HOME/IDLWorkspace/Flare/F'$i'/HMIDoppler'
+  alias 'pf'$i'dw'='pfm $HOME/IDLWorkspace/Flare/F'$i'/HMIDoppler/Work'
+  alias 'pf'$i'iw'='pfm $HOME/IDLWorkspace/Flare/F'$i'/HMIIntensity/Work'
+  alias 'pf'$i'mw'='pfm $HOME/IDLWorkspace/Flare/F'$i'/HMIMagneto/Work'
 done
 
 
 # added by Angel for Charlie codes
-export PATH="/home/angel/Documents/MASTER/Codes/Charlie:$PATH"
-export PATH="/home/angel/Documents/MASTER/Codes/Charlie/shellprogs:$PATH"
-export PATH="/home/angel/Documents/MASTER/Codes/JOBS:$PATH"
-export PATH="/home/angel/Documents/MASTER/Codes/GitHub/JOBS:$PATH"
-export PATH="/home/angel/Documents/MASTER/Codes/Python:$PATH"
-export PATH="/home/angel/Documents/MASTER/Codes/Python/TD:$PATH"
+export PATH="$HOME/Documents/MASTER/Codes/Charlie:$PATH"
+export PATH="$HOME/Documents/MASTER/Codes/Charlie/shellprogs:$PATH"
+export PATH="$HOME/Documents/MASTER/Codes/JOBS:$PATH"
+export PATH="$HOME/Documents/MASTER/Codes/GitHub/JOBS:$PATH"
+export PATH="$HOME/Documents/MASTER/Codes/Python:$PATH"
+export PATH="$HOME/Documents/MASTER/Codes/Python/TD:$PATH"
 #set PATH=($HOME/bin $path)
 
-export PYTHONPATH=/home/angel/Downloads/PLUTO/Tools/pyPLUTO/pyPLUTO
-export PYTHONPATH=$PYTHONPATH:/home/angel/ME-I_Workshop/pyMilne
-export PYTHONPATH=$PYTHONPATH:/home/angel/Documents/MASTER/Codes/Python
+export PYTHONPATH=$HOME/Downloads/PLUTO/Tools/pyPLUTO/pyPLUTO
+export PYTHONPATH=$PYTHONPATH:$HOME/ME-I_Workshop/pyMilne
+export PYTHONPATH=$PYTHONPATH:$HOME/Documents/MASTER/Codes/GitHub/config_files/Python
+export PYTHONPATH=$PYTHONPATH:$HOME/Documents/MASTER/Codes/Python
 #export PYTHONPATH
 
+export GIT_DIR=$HOME"/Documents/MASTER/Codes/GitHub" 
+export GITPY_DIR=$HOME"/Documents/MASTER/Codes/GitHub/config_files/Python"
 
 # -- Overall run of cfitsio programs (like funpack/fpack)
-export LD_LIBRARY_PATH=/home/angel/Documents/MASTER/Codes/cfitsio-3.49:$LD_LIBRARY_PATH
-#export LD_LIBRARY_PATH=/home/angel/Documents/MASTER/Codes/cfitsio-3.49/lib/pkgconfig:$LD_LIBRARY_PATH
-export PATH="/home/angel/Documents/MASTER/Codes/cfitsio-3.49:$PATH"
-#export PATH="/home/angel/Documents/MASTER/Codes/cfitsio-3.49/lib/pkgconfig:$PATH"
-export PATH="/home/angel/Documents/MASTER/Codes/bash:$PATH"
+export LD_LIBRARY_PATH=$HOME/Documents/MASTER/Codes/cfitsio-3.49:$LD_LIBRARY_PATH
+#export LD_LIBRARY_PATH=$HOME/Documents/MASTER/Codes/cfitsio-3.49/lib/pkgconfig:$LD_LIBRARY_PATH
+export PATH="$HOME/Documents/MASTER/Codes/cfitsio-3.49:$PATH"
+#export PATH="$HOME/Documents/MASTER/Codes/cfitsio-3.49/lib/pkgconfig:$PATH"
+export PATH="$HOME/Documents/MASTER/Codes/bash:$PATH"
 
 # -- To no repeat commands on bash history
 export HISTCONTROL=ignoreboth:erasedups
 
 # -- Add to proper latex compilation (put .sty files here)
-export TEXMFHOME=/home/angel/Documents/MASTER/texmf
+export TEXMFHOME=$HOME/Documents/MASTER/texmf
 
 HISTFILESIZE=20000
 HISTSIZE=20000
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk/
-export PLUTO_DIR="/home/angel/Downloads/PLUTO"
+export PLUTO_DIR="$HOME/Downloads/PLUTO"
 PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s\007" "${PWD/#$HOME/\~}"'
 #PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
