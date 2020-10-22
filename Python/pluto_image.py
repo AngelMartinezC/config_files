@@ -34,6 +34,18 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     variable = D.rho
   elif (var == 'pressure') or (var == 'prs'):
     variable = D.prs
+  elif (var == 'velocity1') or (var == 'vx1'):
+    variable = D.vx1
+  elif (var == 'velocity2') or (var == 'vx2'):
+    variable = D.vx2
+  elif (var == 'velocity3') or (var == 'vx3'):
+    variable = D.vx3
+  elif (var == 'mag_b1') or (var == 'Bx1'):
+    variable = D.Bx1
+  elif (var == 'mag_b2') or (var == 'Bx2'):
+    variable = D.Bx2
+  elif (var == 'mag_b3') or (var == 'Bx3'):
+    variable = D.Bx3
 
   if dim == 3:
     if dslice == '12':
