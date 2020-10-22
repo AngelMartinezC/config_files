@@ -245,7 +245,7 @@ export PYTHONPATH=$PYTHONPATH:$HOME/Documents/MASTER/Codes/GitHub/config_files/P
 export PYTHONPATH=$PYTHONPATH:$HOME/Documents/MASTER/Codes/Python
 #export PYTHONPATH
 
-export GIT_DIR=$HOME"/Documents/MASTER/Codes/GitHub" 
+export GITHUB_DIR=$HOME"/Documents/MASTER/Codes/GitHub" 
 export GITPY_DIR=$HOME"/Documents/MASTER/Codes/GitHub/config_files/Python"
 
 # -- Overall run of cfitsio programs (like funpack/fpack)
