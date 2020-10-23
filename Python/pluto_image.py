@@ -22,7 +22,7 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     cbar=True, title=r'Density $\rho$', vmin=None, vmax=None, Mm=True, \
     Mmx=True, Mmy=True, cmap='jet', figsize=(8,10), labelpad=10.0, \
     cbarlabel=r'Density ($\times$10$^{10}$) [gr cm$^{-3}$]', pad=0.05, 
-    dim=2, n=0, dslice='12', **kwargs):
+    dim=2, n=0, dslice='12', unit=None, **kwargs):
 
   """
     If the file has 3 dimensions, select a dslice (transversal o profile 
@@ -63,18 +63,23 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
   else:
       xran = D.x1
       yran = D.x2
+
+  if unit is None:
+    unit = 1
     
-  if vmin == None: vmin = np.min(variable)
-  if vmax == None: vmax = np.max(variable)
+  if vmin is None: vmin = np.min(variable)*unit
+  if vmax is None: vmax = np.max(variable)*unit
 
   I = pp.Image()
   I.pldisplay(D, variable, x1=xran, x2=yran, label1=xlabel, label2=ylabel,\
       title=title, cbar=(cbar,'vertical'), vmin=vmin, vmax=vmax, pad=pad, \
       aspect=aspect, figsize=figsize, cmap=cmap, cbarlabel=cbarlabel, \
-      labelpad=labelpad, **kwargs)
+      labelpad=labelpad, unit=unit, **kwargs)
   
   #x0arr = np.linspace(0.0,np.max(xran)*1e3,20) 
   #y0arr = np.linspace(0.0,np.max(yran)*1e3,20) 
   #I.myfieldlines(D,x0arr,y0arr,colors='k',ls='--',lw=1.0) 
   #print(I)
+
+  return xran, yran
 
