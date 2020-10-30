@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include "interpolation.h"
 
 #define ROWS     2482        /* Number of rows for Model S file */
 #define COLS     6           /* Number of cols for Model S file */
@@ -22,14 +21,9 @@ double kmtorsun(double x);
 double RADIUS[ROWS], CSOUND[ROWS], DENSITY[ROWS], PRESSURE[ROWS],
        G1[ROWS], TEMP[ROWS];
 
-int main_program(int argc, char *argv[]);
-int hola(int x);
 
-int hola(int x){
-  printf("%d\n",x);
-}
 
-int main_program(int argc, char *argv[]){
+int main(int argc, char *argv[]){
 
   int m = 300;
   int n = 150;
@@ -48,7 +42,7 @@ int main_program(int argc, char *argv[]){
   linear_interp(RADIUS, PRESSURE, A, B, m, R_i, PRS_i);
   write_file("RAD.dbl",R_i, m, n);
   //write_file("RHO.dbl",RHO_i, m, n);
-
+  //w
 }
 
 /* Linear interpolation.
