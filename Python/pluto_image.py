@@ -46,6 +46,10 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     variable = D.Bx2
   elif (var == 'mag_b3') or (var == 'Bx3'):
     variable = D.Bx3
+  elif (var == 'divV'):# or (var == 'Bx3'):
+    variable = D.divV
+  elif (var == 'divB'):# or (var == 'Bx3'):
+    variable = D.divB
 
   if dim == 3:
     if dslice == '12':
