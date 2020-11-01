@@ -50,6 +50,8 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     variable = D.divV
   elif (var == 'divB'):# or (var == 'Bx3'):
     variable = D.divB
+  elif (var == 'Temp') or (var == 'temperature'):
+    variable = D.Temp
 
   if dim == 3:
     if dslice == '12':
