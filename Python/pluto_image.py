@@ -52,6 +52,8 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     variable = D.divB
   elif (var == 'Temp') or (var == 'temperature'):
     variable = D.Temp
+  elif (var == 'PTOT') or (var == 'P_TOT'):
+    variable = D.PTOT
 
   if dim == 3:
     if dslice == '12':
