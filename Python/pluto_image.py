@@ -83,7 +83,11 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
       title=title, cbar=(cbar,'vertical'), vmin=vmin, vmax=vmax, pad=pad, \
       aspect=aspect, figsize=figsize, cmap=cmap, cbarlabel=cbarlabel, \
       labelpad=labelpad, unit=unit, **kwargs)
-  
+  dx = np.ones(10)
+  dy = np.ones(10)
+  #I.field_line(D.vx1,D.vx2,D.x1,D.x2,D.dx1,D.dx2,dx,dy)
+  #I.myfieldlines(D,np.linspace(-5,5,10),np.linspace(0,10,0))
+
   #x0arr = np.linspace(0.0,np.max(xran)*1e3,20) 
   #y0arr = np.linspace(0.0,np.max(yran)*1e3,20) 
   #I.myfieldlines(D,x0arr,y0arr,colors='k',ls='--',lw=1.0) 
