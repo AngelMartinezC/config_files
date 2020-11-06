@@ -1,5 +1,12 @@
 #include "pluto.h"
-int t0 = 0;  
+
+double gravity_vector[303];
+int    radtopix(double x);
+void   gravity_read_data(void);
+int    a = 0;
+double control;
+
+
 /* ********************************************************************* */
 void Init (double *v, double x1, double x2, double x3)
 {
@@ -252,3 +259,56 @@ double BodyForcePotential(double x1, double x2, double x3)
   return 0.0;
 }
 #endif
+
+
+/* ********************************************************************* */
+/* ********************************************************************* */
+/* ********************************************************************* */
+
+/* ADDED FUNCTIONS BY THE CUTEST AND SMARTEST GUY */
+
+void   gravity_read_data(void){
+  int    lim  = 300;
+  double yran = 1.0e4;
+  int    id1, id2;
+  double pres_new[300];//[333][333][333];
+  double dens_new[300];
+  double radi_new[300];
+  double derivati[300];
+  double res;
+  id1 = InputDataOpen("density.dbl","grid.out"," ",0);
+  id2 = InputDataOpen("pressure.dbl","grid.out"," ",0);
+  for (int i=0; i<lim; i++){
+    res = yran*i/(double)lim + 100.0/6.0;
+    pres_new[i] = InputDataInterpolate(id1,300.0,res,0.5);
+    dens_new[i] = InputDataInterpolate(id2,300.0,res,0.5);
+    radi_new[i] = res;
+    printf("After \n");
+  }
+  InputDataClose(id1);
+  InputDataClose(id2);
+  double dp, dx;
+  for (int i=0; i<lim; i++){
+    if (i==0){
+      dp = pres_new[i+1]-pres_new[i];
+      dx = radi_new[i+1]-radi_new[i];
+      derivati[i] = dp/dx;
+    }
+    else {
+      dp = pres_new[i]-pres_new[i-1];
+      dx = radi_new[i]-radi_new[i-1];
+      derivati[i] = dp/dx;
+    }
+    gravity_vector[i] = -1.0/dens_new[i]*derivati[i];
+  }
+}
+  
+
+int    radtopix(double x){
+  int     lim = 300;
+  double yran = 1.0e4;
+  double result = (double)lim*(x-100.0/6.0)/yran;
+  return round(result);
+}
+
+
