@@ -125,7 +125,6 @@ void read_file(void){
 /* Save data into file_name
  */
 void write_file(char file_name[], double x_arr[], int m, int n){
-
   FILE *fp;
   fp = fopen(file_name,"w");
   for (int i=0; i<m; i++){
