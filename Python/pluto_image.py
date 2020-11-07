@@ -22,7 +22,7 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     cbar=True, title=r'Density $\rho$', vmin=None, vmax=None, Mm=True, \
     Mmx=True, Mmy=True, cmap='jet', figsize=(8,10), labelpad=10.0, \
     cbarlabel=r'Density ($\times$10$^{10}$) [gr cm$^{-3}$]', pad=0.05, 
-    dim=2, n=0, dslice='12', unit=None, **kwargs):
+    dim=2, n=0, dslice='12', unit=None, diff=None, **kwargs):
 
   """
     If the file has 3 dimensions, select a dslice (transversal o profile 
@@ -30,20 +30,27 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
   """
   
   D = pp.pload(frame,w_dir=wdir)
+  D2= pp.pload(frame+10,w_dir=wdir)
   if (var == 'rho') or (var == 'density'):
     variable = D.rho
+    variable2= D2.rho
   elif (var == 'pressure') or (var == 'prs'):
     variable = D.prs
+    variable2= D2.prs
   elif (var == 'velocity1') or (var == 'vx1'):
     variable = D.vx1
+    variable2= D2.vx1
   elif (var == 'velocity2') or (var == 'vx2'):
     variable = D.vx2
+    variable2= D2.vx2
   elif (var == 'velocity3') or (var == 'vx3'):
     variable = D.vx3
   elif (var == 'mag_b1') or (var == 'Bx1'):
     variable = D.Bx1
+    variable2= D2.Bx1
   elif (var == 'mag_b2') or (var == 'Bx2'):
     variable = D.Bx2
+    variable2= D2.Bx2
   elif (var == 'mag_b3') or (var == 'Bx3'):
     variable = D.Bx3
   elif (var == 'divV'):# or (var == 'Bx3'):
@@ -79,10 +86,16 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
   if vmax is None: vmax = np.max(variable)*unit
 
   I = pp.Image()
-  I.pldisplay(D, variable, x1=xran, x2=yran, label1=xlabel, label2=ylabel,\
+  if diff is None:
+    I.pldisplay(D, variable, x1=xran, x2=yran, label1=xlabel, label2=ylabel,\
       title=title, cbar=(cbar,'vertical'), vmin=vmin, vmax=vmax, pad=pad, \
       aspect=aspect, figsize=figsize, cmap=cmap, cbarlabel=cbarlabel, \
       labelpad=labelpad, unit=unit, **kwargs)
+  else:
+    I.pldisplay(D, variable2-variable, x1=xran, x2=yran, label1=xlabel, \
+      label2=ylabel, title=title, cbar=(cbar,'vertical'), vmin=vmin, \
+      vmax=vmax, pad=pad, aspect=aspect, figsize=figsize, cmap=cmap, \
+      cbarlabel=cbarlabel, labelpad=labelpad, unit=unit, **kwargs)
   dx = np.ones(10)
   dy = np.ones(10)
   #I.field_line(D.vx1,D.vx2,D.x1,D.x2,D.dx1,D.dx2,dx,dy)
