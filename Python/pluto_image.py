@@ -33,24 +33,18 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     D = pp.pload(frame,w_dir=wdir)
     if (var == 'rho') or (var == 'density'):
       variable = D.rho
-      variable2= D2.rho
     elif (var == 'pressure') or (var == 'prs'):
       variable = D.prs
-      variable2= D2.prs
     elif (var == 'velocity1') or (var == 'vx1'):
       variable = D.vx1
-      variable2= D2.vx1
     elif (var == 'velocity2') or (var == 'vx2'):
       variable = D.vx2
-      variable2= D2.vx2
     elif (var == 'velocity3') or (var == 'vx3'):
       variable = D.vx3
     elif (var == 'mag_b1') or (var == 'Bx1'):
       variable = D.Bx1
-      variable2= D2.Bx1
     elif (var == 'mag_b2') or (var == 'Bx2'):
       variable = D.Bx2
-      variable2= D2.Bx2
     elif (var == 'mag_b3') or (var == 'Bx3'):
       variable = D.Bx3
     elif (var == 'divV'):# or (var == 'Bx3'):
