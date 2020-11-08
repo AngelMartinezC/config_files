@@ -29,33 +29,32 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     image)
   """
   
-  if diff is None:
-    D = pp.pload(frame,w_dir=wdir)
-    if (var == 'rho') or (var == 'density'):
-      variable = D.rho
-    elif (var == 'pressure') or (var == 'prs'):
-      variable = D.prs
-    elif (var == 'velocity1') or (var == 'vx1'):
-      variable = D.vx1
-    elif (var == 'velocity2') or (var == 'vx2'):
-      variable = D.vx2
-    elif (var == 'velocity3') or (var == 'vx3'):
-      variable = D.vx3
-    elif (var == 'mag_b1') or (var == 'Bx1'):
-      variable = D.Bx1
-    elif (var == 'mag_b2') or (var == 'Bx2'):
-      variable = D.Bx2
-    elif (var == 'mag_b3') or (var == 'Bx3'):
-      variable = D.Bx3
-    elif (var == 'divV'):# or (var == 'Bx3'):
-      variable = D.divV
-    elif (var == 'divB'):# or (var == 'Bx3'):
-      variable = D.divB
-    elif (var == 'Temp') or (var == 'temperature'):
-      variable = D.Temp
-    elif (var == 'PTOT') or (var == 'P_TOT'):
-      variable = D.PTOT
-  else:
+  D = pp.pload(frame,w_dir=wdir)
+  if (var == 'rho') or (var == 'density'):
+    variable = D.rho
+  elif (var == 'pressure') or (var == 'prs'):
+    variable = D.prs
+  elif (var == 'velocity1') or (var == 'vx1'):
+    variable = D.vx1
+  elif (var == 'velocity2') or (var == 'vx2'):
+    variable = D.vx2
+  elif (var == 'velocity3') or (var == 'vx3'):
+    variable = D.vx3
+  elif (var == 'mag_b1') or (var == 'Bx1'):
+    variable = D.Bx1
+  elif (var == 'mag_b2') or (var == 'Bx2'):
+    variable = D.Bx2
+  elif (var == 'mag_b3') or (var == 'Bx3'):
+    variable = D.Bx3
+  elif (var == 'divV'):# or (var == 'Bx3'):
+    variable = D.divV
+  elif (var == 'divB'):# or (var == 'Bx3'):
+    variable = D.divB
+  elif (var == 'Temp') or (var == 'temperature'):
+    variable = D.Temp
+  elif (var == 'PTOT') or (var == 'P_TOT'):
+    variable = D.PTOT
+  if diff:
     D2= pp.pload(frame+step,w_dir=wdir)
     if (var == 'rho') or (var == 'density'):
       variable2= D2.rho
@@ -105,16 +104,16 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
   if vmax is None: vmax = np.max(variable)*unit
 
   I = pp.Image()
-  if diff is None:
-    I.pldisplay(D, variable, x1=xran,x2=yran,label1=xlabel,label2=ylabel,\
-      title=title, cbar=(cbar,'vertical'), vmin=vmin, vmax=vmax, pad=pad, \
-      aspect=aspect, figsize=figsize, cmap=cmap, cbarlabel=cbarlabel, \
-      labelpad=labelpad, unit=unit, **kwargs)
-  else:
+  if diff:
     I.pldisplay(D, variable2-variable, x1=xran, x2=yran, label1=xlabel, \
       label2=ylabel, title=title, cbar=(cbar,'vertical'), vmin=vmin, \
       vmax=vmax, pad=pad, aspect=aspect, figsize=figsize, cmap=cmap, \
       cbarlabel=cbarlabel, labelpad=labelpad, unit=unit, **kwargs)
+  else:
+    I.pldisplay(D, variable, x1=xran,x2=yran,label1=xlabel,label2=ylabel,\
+      title=title, cbar=(cbar,'vertical'), vmin=vmin, vmax=vmax, pad=pad, \
+      aspect=aspect, figsize=figsize, cmap=cmap, cbarlabel=cbarlabel, \
+      labelpad=labelpad, unit=unit, **kwargs)
   dx = np.ones(10)
   dy = np.ones(10)
   #I.field_line(D.vx1,D.vx2,D.x1,D.x2,D.dx1,D.dx2,dx,dy)
