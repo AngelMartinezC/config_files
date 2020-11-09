@@ -1,9 +1,12 @@
 """
   Python file to be called for plotting .dbl files in 2 and 3 dimensions.
+  This file uses the pluto python module to read these files.
   
   Add:
     bash> export PYTHONPATH=$PYTHONPATH:$HOME/config_files/Python
   at the end of .bashrc file.
+
+  Angel
 
 """
 
@@ -22,7 +25,8 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     cbar=True, title=r'Density $\rho$', vmin=None, vmax=None, Mm=True, \
     Mmx=True, Mmy=True, cmap='jet', figsize=(8,10), labelpad=10.0, \
     cbarlabel=r'Density ($\times$10$^{10}$) [gr cm$^{-3}$]', pad=0.05, 
-    dim=2, n=0, dslice='12', unit=None, diff=None, step=1, **kwargs):
+    dim=2, n=0, dslice='12', unit=None, diff=None, step=1, image=True,\
+    **kwargs):
 
   """
     If the file has 3 dimensions, select a dslice (transversal o profile 
@@ -103,17 +107,21 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
   if vmin is None: vmin = np.min(variable)*unit
   if vmax is None: vmax = np.max(variable)*unit
 
-  I = pp.Image()
-  if diff:
-    I.pldisplay(D, variable2-variable, x1=xran, x2=yran, label1=xlabel, \
-      label2=ylabel, title=title, cbar=(cbar,'vertical'), vmin=vmin, \
-      vmax=vmax, pad=pad, aspect=aspect, figsize=figsize, cmap=cmap, \
-      cbarlabel=cbarlabel, labelpad=labelpad, unit=unit, **kwargs)
+
+  if image:
+    I = pp.Image()
+    if diff:
+      I.pldisplay(D, variable2-variable, x1=xran, x2=yran, label1=xlabel, \
+        label2=ylabel, title=title, cbar=(cbar,'vertical'), vmin=vmin, \
+        vmax=vmax, pad=pad, aspect=aspect, figsize=figsize, cmap=cmap, \
+        cbarlabel=cbarlabel, labelpad=labelpad, unit=unit, **kwargs)
+    else:
+      I.pldisplay(D, variable, x1=xran,x2=yran,label1=xlabel,label2=ylabel,\
+        title=title,cbar=(cbar,'vertical'), vmin=vmin, vmax=vmax, pad=pad, \
+        aspect=aspect, figsize=figsize, cmap=cmap, cbarlabel=cbarlabel, \
+        labelpad=labelpad, unit=unit, **kwargs)
   else:
-    I.pldisplay(D, variable, x1=xran,x2=yran,label1=xlabel,label2=ylabel,\
-      title=title, cbar=(cbar,'vertical'), vmin=vmin, vmax=vmax, pad=pad, \
-      aspect=aspect, figsize=figsize, cmap=cmap, cbarlabel=cbarlabel, \
-      labelpad=labelpad, unit=unit, **kwargs)
+    pass
   dx = np.ones(10)
   dy = np.ones(10)
   #I.field_line(D.vx1,D.vx2,D.x1,D.x2,D.dx1,D.dx2,dx,dy)
@@ -123,6 +131,9 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
   #y0arr = np.linspace(0.0,np.max(yran)*1e3,20) 
   #I.myfieldlines(D,x0arr,y0arr,colors='k',ls='--',lw=1.0) 
   #print(I)
-
-  return xran, yran
+  
+  if diff:
+    return xran, yran, variable2-variable
+  else:
+    return xran, yran, variable
 
