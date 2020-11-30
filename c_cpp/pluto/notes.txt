@@ -1,3 +1,0 @@
-If parallel, log files will be written on log folder
-
-a 'dbl_files' folder is needed for output
