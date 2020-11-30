@@ -14,7 +14,7 @@ else:
   os.system('mkdir IMAGES')
 
 #- For a 3D image (for a 2D, dim=2):
-xr, yr = pi.image(2, cmap='jet', aspect='auto', dim=3, dslice='13',n=55) 
+xr, yr, array = pi.image(2, cmap='jet', aspect='auto', dim=3, dslice='13',n=55) 
 xran = [np.min(xr),np.max(xr)]
 yran = [np.min(yr),np.max(yr)]
 XX0 = np.linspace(xran[0],xran[1],9)
