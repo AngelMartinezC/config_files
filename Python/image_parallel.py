@@ -23,7 +23,8 @@ figsize = (11,10)
 counter = 0
 #for i in range(0,10):
 def image(i):
-  xr, yr, array = pi.image(i, cmap='jet', aspect='equal', figsize=figsize) 
+  xr, yr, array = pi.image(i, cmap='jet', aspect='equal', figsize=figsize, \
+      xdir='dbl_files/') 
   xran = [np.min(xr),np.max(xr)]
   yran = [np.min(yr),np.max(yr)]
   XX0 = np.linspace(xran[0],xran[1],9)
