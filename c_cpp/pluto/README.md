@@ -1,7 +1,9 @@
 # Considerations:
 
+
 ## For parallel runs:
 If parallel, log files will be written on log folder
 
+
 ## Folders:
-a 'dbl_files' folder is needed for output
+A 'dbl_files' folder is needed for output
