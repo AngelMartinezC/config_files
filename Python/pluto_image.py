@@ -17,8 +17,6 @@ import os
 import sys 
 plt.rcParams.update({'font.size': 18})
 
-wdir = os.popen('echo `pwd`/').read()
-wdir = wdir.replace('\n','')
 
 #p = sys.argv[1]
 def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
@@ -26,7 +24,11 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     Mmx=True, Mmy=True, cmap='jet', figsize=(8,10), labelpad=10.0, \
     cbarlabel=r'Density ($\times$10$^{10}$) [gr cm$^{-3}$]', pad=0.05, 
     dim=2, n=0, dslice='12', unit=None, diff=None, step=1, image=True,\
-    **kwargs):
+    wdir=None, **kwargs):
+
+  if wdir is None:
+    wdir = os.popen('echo `pwd`/').read()
+    wdir = wdir.replace('\n','')
 
   """
     If the file has 3 dimensions, select a dslice (transversal o profile 
