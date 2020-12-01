@@ -1,27 +1,40 @@
+/* First attempt to evolve solar interior conditions from the PLUTO module. 
+ * 
+ *
+ */
+
+
 #include "pluto.h"
 
-double gravity_vector[303];
-double gravity_vector_in[303];
+#define x_range   150  /* Pixels in x1-direction */
+#define y_range   300  /* Pixels in x2-direction */
+
+double gravity_vector[y_range];
+double gravity_vector_in[y_range];
+int    a          = 0;      /* Counter to initialize global gravity array */
+double T_f        = 1.5;    /* Fraction of the temp. inside sunspot */
+double Bext       = 0.1;    /* External magnetic field Gauss (constant)*/
+double Bint       = 1000.0; /* Internal magnetic field Gauss (constant)*/
+double radius     = 0.0e3;  /* Radius of the sunspot */
+double press_unit = sqrt(4*CONST_PI*UNIT_DENSITY*pow(UNIT_VELOCITY,2));
 int    radtopix(double x);
 void   gravity_read_data(void);
-double press_unit = sqrt(4*CONST_PI*UNIT_DENSITY*pow(UNIT_VELOCITY,2));
-int    a          = 0; /* Counter to initialize global gravity array */
-double T_f        = 1.5;
-double Bext       = 0.1;
-double Bint       = 1000.0;
-double radius     = 0.0e3;
+
 
 
 /* ********************************************************************* */
 void Init (double *v, double x1, double x2, double x3)
 {
-  
   #if HAVE_ENERGY
   #endif
+
   v[TRC] = 0.0;
-  if (a==0){ /* To read gravity data from hydrostatic equilibrium */
-    gravity_read_data();
+  /* Read gravity data from hydrostatic equilibrium. I set a counter just
+   * to initialize gravity array */
+  if (a==0){ 
+    gravity_read_data(); 
   }
+
   //printf("gravity vector %.10f\n",gravity_vector[295]);
   //double rnd, randomN;
   //rnd = rand() % 200;
@@ -109,7 +122,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
     DOM_LOOP(k,j,i){}
   }
 
-  if (side == X1_BEG){  /* -- X1_BEG boundary -- */
+  if (side == X1_BEG){  /* -- X1_BEG boundary: outflow -- */
     if (box->vpos == CENTER) {
       BOX_LOOP(box,k,j,i){  }
     }else if (box->vpos == X1FACE){
@@ -121,7 +134,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
     }
   }
 
-  if (side == X1_END){  /* -- X1_END boundary -- */
+  if (side == X1_END){  /* -- X1_END boundary: outflow -- */
     if (box->vpos == CENTER) {
       BOX_LOOP(box,k,j,i){  }
     }else if (box->vpos == X1FACE){
@@ -134,20 +147,20 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
   }
   
   
-  if (side == X2_END){  /* -- X2_BEG boundary -- */
+  if (side == X2_END){  /* -- X2_END boundary: semi-permeable -- */
     BOX_LOOP(box,k,j,i){
     if (x1[i]>-radius && x1[i]<radius){ 
       d->Vc[BX2][k][j][i] = Bint/press_unit;
       d->Vc[RHO][k][j][i] = (T_f)*InputDataInterpolate(id1,x1[i],x2[j],x3[k]);
       d->Vc[PRS][k][j][i] = InputDataInterpolate (id2,x1[i],x2[j],x3[k]) +
           (1.0/(2.0*pow(press_unit,2)))*(pow(Bext,2)-pow(Bint,2));
-      d->Vc[VX2][k][j][i] = -0.099*d->Vc[VX2][k][2*JEND-j-1][i];//1.0;
+      d->Vc[VX2][k][j][i] = -0.050*d->Vc[VX2][k][2*JEND-j-1][i];//1.0;
     }
     else{
       d->Vc[BX2][k][j][i] = d->Vc[BX2][k][2*JEND-j-1][i];//1.0;
       d->Vc[RHO][k][j][i] = InputDataInterpolate(id1,x1[i],x2[j],x3[k]);
       d->Vc[PRS][k][j][i] = InputDataInterpolate(id2,x1[i],x2[j],x3[k]);
-      d->Vc[VX2][k][j][i] = -0.5*d->Vc[VX2][k][2*JEND-j-1][i];//1.0;
+      d->Vc[VX2][k][j][i] = -0.070*d->Vc[VX2][k][2*JEND-j-1][i];//1.0;
     }
       d->Vc[VX1][k][j][i] =      d->Vc[VX1][k][2*JEND-j-1][i];//1.0;
       d->Vc[BX1][k][j][i] =      d->Vc[BX1][k][2*JEND-j-1][i];//1.0;
@@ -155,7 +168,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
     }
   }
 
-  if (side == X2_BEG){
+  if (side == X2_BEG){  /* -- X2_BEG boundary: semi-permeable -- */
     BOX_LOOP(box,k,j,i){
     if (x1[i]>-radius && x1[i]<radius){ 
       //d->Vc[BX2][k][j][i] = Bint/press_unit;
@@ -230,26 +243,33 @@ double BodyForcePotential(double x1, double x2, double x3)
 #endif
 
 
-/* ********************************************************************* */
+
+
 /* ********************************************************************* */
 /* ********************************************************************* */
 
 /* ADDED FUNCTIONS BY THE CUTEST AND SMARTEST GUY */
 
+
+/* This function reads the input of the solar model to get thermodynamical
+ * variables for write the gravity into an array. The fraction 100.0/6.0 
+ * accounts for the "zero" of the photosphere in the Solar Model data.
+ */
 void   gravity_read_data(void){
-  int    lim  = 300;
-  double yran = 1.0e4;  // Take 
+  printf("Start gravity array\n");
+  int    lim  = y_range;
+  double yran = g_domEnd[JDIR];
   int    id1, id2;
-  double pres_new[300], pres_new_in[300];//[333][333][333];
-  double dens_new[300], dens_new_in[300];
-  double radi_new[300], radi_new_in[300];
-  double derivati[300], derivati_in[300];
+  double pres_new[y_range], pres_new_in[y_range];
+  double dens_new[y_range], dens_new_in[y_range];
+  double radi_new[y_range], radi_new_in[y_range];
+  double derivati[y_range], derivati_in[y_range];
   double res, res2;
   id1 = InputDataOpen("density.dbl","grid.out"," ",0);
   id2 = InputDataOpen("pressure.dbl","grid.out"," ",0);
-  for (int i=0; i<lim; i++){
-    res = yran*(lim-i-1)/(double)lim + 100.0/6.0;
-    res2= yran*i/(double)lim + 100.0/6.0;
+  for (int i=0; i<lim; i++){ /* 100/6 to correct for zero of radius */
+    res            =       yran*(lim-i-1)/(double)lim + 100.0/6.0;
+    res2           =       yran*i/(double)lim + 100.0/6.0;
     dens_new[i]    =       InputDataInterpolate(id1,0.0,res2,0.5);
     dens_new_in[i] = (T_f)*InputDataInterpolate(id1,0.0,res2,0.5);
     pres_new[i]    =       InputDataInterpolate(id2,0.0,res2,0.5);
@@ -281,8 +301,8 @@ void   gravity_read_data(void){
     gravity_vector[i]    = -1.0/dens_new[i]*derivati[i];
     gravity_vector_in[i] = -1.0/dens_new_in[i]*derivati_in[i];
   }
-  printf("\n  ");
-  printf("grav %f  grav_in %f\n\n",gravity_vector[100],gravity_vector_in[100]);
+  printf("grav %f  grav_in %f\n",gravity_vector[100],gravity_vector_in[100]);
+  printf("End gravity array \n");
   //printf(  " dens %f  dens_in %f\n",dens_new[10],dens_new_in[10]);
   //printf(  " pres %f  pres_in %f\n",pres_new[10],pres_new_in[10]);
 }

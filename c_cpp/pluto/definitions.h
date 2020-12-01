@@ -2,7 +2,7 @@
 #define  DIMENSIONS                     2
 #define  COMPONENTS                     3
 #define  GEOMETRY                       CARTESIAN
-#define  BODY_FORCE                     NO
+#define  BODY_FORCE                     VECTOR
 #define  FORCED_TURB                    NO
 #define  COOLING                        NO
 #define  RECONSTRUCTION                 LINEAR
@@ -29,9 +29,9 @@
 
 /* [Beg] user-defined constants (do not change this line) */
 
-#define  UNIT_DENSITY                   1.0e-10
-#define  UNIT_LENGTH                    1.0e+5
-#define  UNIT_TIME                      1.0
+#define  UNIT_DENSITY                   1.0e-6
+#define  UNIT_LENGTH                    1.0e5
+#define  UNIT_VELOCITY                  1.0e5
 #define  PI                             3.141592653
 
 /* [End] user-defined constants (do not change this line) */
