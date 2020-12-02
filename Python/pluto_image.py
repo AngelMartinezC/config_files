@@ -61,7 +61,7 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
   elif (var == 'PTOT') or (var == 'P_TOT'):
     variable = D.PTOT
   if diff:
-    D2= pp.pload(frame+step,w_dir=wdir)
+    D2= pp.pload(frame-step,w_dir=wdir)
     if (var == 'rho') or (var == 'density'):
       variable2= D2.rho
     elif (var == 'pressure') or (var == 'prs'):
