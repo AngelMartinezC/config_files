@@ -35,9 +35,9 @@ def image(i):
   plt.xlabel(r'x [Mm]')
   plt.ylabel(r'z [Mm]')
   minute = i/2
-  days = minute // 1440
-  hours = (minute - (days*1440)) // 60
-  minutes = (minute - (days*1440) - (hours*60)) // 1
+  days = int(minute // 1440)
+  hours = int((minute - (days*1440)) // 60)
+  minutes = int((minute - (days*1440) - (hours*60)) // 1)
   plt.title('Time: {} days  {} h  {} min'.format(days,hours,minutes), 
       fontsize=18)
   
