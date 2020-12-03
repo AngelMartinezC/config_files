@@ -27,7 +27,7 @@ def image(i):
   xran = [np.min(xr),np.max(xr)]
   yran = [np.min(yr),np.max(yr)]
   XX0 = np.linspace(xran[0],xran[1],9)
-  XX1 = np.linspace(-5,5,9,dtype=int)
+  XX1 = np.linspace(-10,10,9,dtype=int)
   YY0 = np.linspace(yran[0],yran[1],9)
   YY1 = np.linspace(10,0,9,dtype=int)
   plt.xticks(XX0,XX1)
