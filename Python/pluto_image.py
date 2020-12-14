@@ -54,11 +54,11 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
   elif (var == 'mag_b3') or (var == 'Bx3'):
     variable = D.Bx3
   elif (var == 'mag_b1s') or (var == 'Bx1s'):
-    variable = D.Bx1
+    variable = D.Bx1s
   elif (var == 'mag_b2s') or (var == 'Bx2s'):
-    variable = D.Bx2
+    variable = D.Bx2s
   elif (var == 'mag_b3s') or (var == 'Bx3s'):
-    variable = D.Bx3
+    variable = D.Bx3s
   elif (var == 'divV'):# or (var == 'Bx3'):
     variable = D.divV
   elif (var == 'divB'):# or (var == 'Bx3'):
@@ -86,11 +86,11 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     elif (var == 'mag_b3') or (var == 'Bx3'):
       variable2= D2.Bx3
     elif (var == 'mag_b1s') or (var == 'Bx1s'):
-      variable2= D2.Bx1
+      variable2= D2.Bx1s
     elif (var == 'mag_b2s') or (var == 'Bx2s'):
-      variable2= D2.Bx2
+      variable2= D2.Bx2s
     elif (var == 'mag_b3s') or (var == 'Bx3s'):
-      variable2= D2.Bx3
+      variable2= D2.Bx3s
     elif (var == 'divV'):# or (var == 'Bx3'):
       variable2= D2.divV
     elif (var == 'divB'):# or (var == 'Bx3'):
