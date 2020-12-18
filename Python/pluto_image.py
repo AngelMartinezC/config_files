@@ -67,6 +67,8 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     variable = D.Temp
   elif (var == 'PTOT') or (var == 'P_TOT'):
     variable = D.PTOT
+  elif (var == 'psi') or (var == 'glm'):
+    variable = D.psi_glm
   if diff:
     D2= pp.pload(frame-step,w_dir=wdir)
     if (var == 'rho') or (var == 'density'):
