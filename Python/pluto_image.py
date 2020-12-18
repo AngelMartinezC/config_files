@@ -56,7 +56,7 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
   elif (var == 'mag_b1s') or (var == 'Bx1s'):
     variable = D.Bx1s
   elif (var == 'mag_b2s') or (var == 'Bx2s'):
-    variable = D.psi_glm
+    variable = D.Bx2s
   elif (var == 'mag_b3s') or (var == 'Bx3s'):
     variable = D.Bx3s
   elif (var == 'divV'):# or (var == 'Bx3'):
