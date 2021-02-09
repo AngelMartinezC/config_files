@@ -25,7 +25,7 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     Mmx=True, Mmy=True, cmap='jet', figsize=(8,10), labelpad=10.0, \
     cbarlabel=r'Density ($\times$10$^{10}$) [gr cm$^{-3}$]', pad=0.05, 
     dim=2, n=0, dslice='12', unit=None, diff=None, step=1, image=True,\
-    wdir=None, **kwargs):
+    wdir=None, vectorial=False, log=False,**kwargs):
 
   if wdir is None:
     wdir = os.popen('echo `pwd`/').read()
@@ -101,44 +101,76 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
       variable2= D2.Temp
     elif (var == 'PTOT') or (var == 'P_TOT'):
       variable2= D2.PTOT
+    if log:
+      variable2 = np.log10(variable2)
+    else:
+      pass 
 
   if dim == 3:
     if dslice == '12':
       variable = variable[:,:,n]
       xran = D.x1
       yran = D.x2
+      VX1 = D.vx1[:,:,n]
+      VX2 = D.vx2[:,:,n]
     elif dslice == '13':
       variable = variable[:,n,:]
       xran = D.x1
       yran = D.x3
+      VX1 = D.vx1[:,n,:]
+      VX2 = D.vx2[:,n,:]
     elif dslice == '23':
       variable = variable[n,:,:]
       xran = D.x2
       yran = D.x3
+      VX1 = D.vx1[n,:,:]
+      VX2 = D.vx2[n,:,:]
   else:
       xran = D.x1
       yran = D.x2
+      VX1 = D.vx1
+      VX2 = D.vx2
 
   if unit is None: unit = 1
     
   if vmin is None: vmin = np.min(variable)*unit
   if vmax is None: vmax = np.max(variable)*unit
 
+  if log:
+    variable  = np.log10(variable)
+  else:
+    pass 
 
   if image:
     I = pp.Image()
     if diff:
+      nlinf = pp.nlast_info(w_dir=wdir)
       I.pldisplay(D, variable2-variable, x1=xran, x2=yran, label1=xlabel, \
         label2=ylabel, title=title, cbar=(cbar,'vertical'), vmin=vmin, \
         vmax=vmax, pad=pad, aspect=aspect, figsize=figsize, cmap=cmap, \
         cbarlabel=cbarlabel, labelpad=labelpad, unit=unit, **kwargs)
     else:
+      nlinf = pp.nlast_info(w_dir=wdir)
       I.pldisplay(D, variable, x1=xran,x2=yran,label1=xlabel,label2=ylabel,\
         title=title,cbar=(cbar,'vertical'), vmin=vmin, vmax=vmax, pad=pad, \
         aspect=aspect, figsize=figsize, cmap=cmap, cbarlabel=cbarlabel, \
         labelpad=labelpad, unit=unit, **kwargs)
+      if vectorial:
+        T = pp.Tools()
+        newdims = 2*(20,)
+        Xmesh, Ymesh = np.meshgrid(D.x1.T,D.x2.T)
+        xcong = T.congrid(Xmesh,newdims,method='linear')
+        ycong = T.congrid(Ymesh,newdims,method='linear')
+
+        velxcong = T.congrid(VX1.T,newdims,method='linear')
+        velycong = T.congrid(VX2.T,newdims,method='linear')
+        plt.gca().quiver(xcong, ycong, velxcong, velycong,color='w') 
+        #I.myfieldlines(D,np.linspace(D.x1.min(),D.x1.max(), 5), \
+        #  np.linspace(D.x2.min(),D.x2.min(), 5), colors='w', ls='-', lw=1.5) 
   else:
     pass
+
+
   dx = np.ones(10)
   dy = np.ones(10)
   #I.field_line(D.vx1,D.vx2,D.x1,D.x2,D.dx1,D.dx2,dx,dy)
