@@ -8,7 +8,6 @@
 
   Angel
 
-
 """
 
 import numpy as np
@@ -25,7 +24,7 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     Mmx=True, Mmy=True, cmap='jet', figsize=(8,10), labelpad=10.0, \
     cbarlabel=r'Density ($\times$10$^{10}$) [gr cm$^{-3}$]', pad=0.05, 
     dim=2, n=0, dslice='12', unit=None, diff=None, step=1, image=True,\
-    wdir=None, vectorial=False, log=False,**kwargs):
+    wdir=None, vectorial=False, vecB=False, log=False,**kwargs):
 
   if wdir is None:
     wdir = os.popen('echo `pwd`/').read()
@@ -113,23 +112,31 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
       yran = D.x2
       VX1 = D.vx1[:,:,n]
       VX2 = D.vx2[:,:,n]
+      BX1 = D.Bx1[:,:,n]
+      BX2 = D.Bx2[:,:,n]
     elif dslice == '13':
       variable = variable[:,n,:]
       xran = D.x1
       yran = D.x3
       VX1 = D.vx1[:,n,:]
       VX2 = D.vx2[:,n,:]
+      BX1 = D.Bx1[:,n,:]
+      BX2 = D.Bx2[:,n,:]
     elif dslice == '23':
       variable = variable[n,:,:]
       xran = D.x2
       yran = D.x3
       VX1 = D.vx1[n,:,:]
       VX2 = D.vx2[n,:,:]
+      BX1 = D.Bx1[n,:,:]
+      BX2 = D.Bx2[n,:,:]
   else:
       xran = D.x1
       yran = D.x2
       VX1 = D.vx1
       VX2 = D.vx2
+      BX1 = D.Bx1
+      BX2 = D.Bx2
 
   if unit is None: unit = 1
     
@@ -161,12 +168,13 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
         Xmesh, Ymesh = np.meshgrid(D.x1.T,D.x2.T)
         xcong = T.congrid(Xmesh,newdims,method='linear')
         ycong = T.congrid(Ymesh,newdims,method='linear')
-
-        velxcong = T.congrid(VX1.T,newdims,method='linear')
-        velycong = T.congrid(VX2.T,newdims,method='linear')
+        if vecB:
+          velxcong = T.congrid(BX1.T,newdims,method='linear')
+          velycong = T.congrid(BX2.T,newdims,method='linear')
+        else:
+          velxcong = T.congrid(VX1.T,newdims,method='linear')
+          velycong = T.congrid(VX2.T,newdims,method='linear')
         plt.gca().quiver(xcong, ycong, velxcong, velycong,color='w') 
-        #I.myfieldlines(D,np.linspace(D.x1.min(),D.x1.max(), 5), \
-        #  np.linspace(D.x2.min(),D.x2.min(), 5), colors='w', ls='-', lw=1.5) 
   else:
     pass
 
@@ -175,14 +183,13 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
   dy = np.ones(10)
   #I.field_line(D.vx1,D.vx2,D.x1,D.x2,D.dx1,D.dx2,dx,dy)
   #I.myfieldlines(D,np.linspace(-5,5,10),np.linspace(0,10,0))
-
   #x0arr = np.linspace(0.0,np.max(xran)*1e3,20) 
   #y0arr = np.linspace(0.0,np.max(yran)*1e3,20) 
   #I.myfieldlines(D,x0arr,y0arr,colors='k',ls='--',lw=1.0) 
   #print(I)
   
   if diff:
-    return xran, yran, variable2-variable
+    return xran, yran, np.transpose(variable2-variable)
   else:
-    return xran, yran, variable
+    return xran, yran, np.transpose(variable)
 
