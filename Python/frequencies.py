@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.interpolate import interp1d
+from scipy.interpolate import interp1d, interp2d
 import os
 import matplotlib
 import warnings   # ------ librería que esconde los warnings
@@ -364,12 +364,12 @@ def plot_TD(single=True, bounces=False):
 # -- Plots paths of rays in a polar plot (like cover)
 def plot_many_paths():
   l = 10
-  w = 0.011
+  w = 0.003
   fig, ax = plt.subplots(subplot_kw={'projection': 'polar'},figsize=(9,9))
   colors = ['b','r','g','purple','olive','orange','cyan','lime']
   cc = 0
-  for l in [5,10,20,30,50,70,80,90]:
-    radius, theta, time = path_inside(w=w, l=l)
+  for l in [20,25,75]:
+    radius, theta, time = path_inside(w=2*np.pi*w, l=l,rmin=0.4)
     print("Making plot of l=%d"%l)
     for i in range(6):
       if i==0:
@@ -385,16 +385,17 @@ def plot_many_paths():
   plt.show()
 
 #plot_many_paths()
+#exit()
 
 # Function to make one skip for a given frequency and degree number.
-def path_for_video(w=0.005,l=30,rmin=0.8,skips=1):
+def path_for_video(w=0.005,l=30,rmin=0.8,skips=1,res=12000):
   """
     Function to make one skip for a given frequency and degree number.
     Here integrals of time, theta and time are made in order to return a
     specific number of skips. By default, just one skip (both right and right)
     is plotted. 
   """
-  radius, theta, time = path_inside(w=w, l=l, rmin=rmin)
+  radius, theta, time = path_inside(w=w, l=l, rmin=rmin, n=res)
   idx = np.argmax(radius)
   tiempo00 = np.array(time[0:idx])
   nn = 0
@@ -426,128 +427,359 @@ def path_for_video(w=0.005,l=30,rmin=0.8,skips=1):
     radio  += list(r_t)
     tiempo += list(t_t+i*max(t_t))
   #print(tiempo)
+
   return np.array(radio),np.array(thetai),np.array(thetad),np.array(tiempo,dtype=float)
 
-#rr,thi,thd,tt=path_for_video(0.005, 440,rmin=0.6,skips=8)
-#plt.plot(rr)
-#rr,thi,thd,tt=path_for_video(0.005, 440,rmin=0.9,skips=7)
-#plt.plot(rr) plt.show()
-#print(len(rr))
-#print(rr)
-#exit()
-
-# temp is the array with the smallest maximum time, tmin is a seed
-# This will not check whether the minimun time corresponds to the 
-# array with the minimum size
-freq = 0.005
-radio, thiz, thde, tiempo, tmin, ctemp = [], [], [], [], 1e8, 0
-skips_arr = [2,3,3,4,5,7,8,12,13,14]
-depth_l = [0.6,0.95,0.97,0.97,0.98,0.98,0.99,0.994,0.997]
-l_array = [100, 300, 400, 500, 700, 900,1000,1200, 1700]#,1000,1200]
-ccc = ['orange','g','r','b','purple','gold','lime','deeppink','cyan']
-modes = len(l_array)
-T = 3600
-tt = np.arange(0,T+1,1)
-for l in l_array:
-  #if l==440:
-  #  r, thi, thd, t = path_for_video(2*np.pi*freq,l,rmin=0.95,skips=skips_arr[ctemp])
-  #elif l==300:
-  #  r, thi, thd, t = path_for_video(2*np.pi*freq,l,rmin=0.77,skips=skips_arr[ctemp])
-  #elif l==200:
-  #  r, thi, thd, t = path_for_video(2*np.pi*freq,l,rmin=0.6,skips=skips_arr[ctemp])
-  #else:
-  #  r, thi, thd, t = path_for_video(2*np.pi*freq,l,rmin=0.6,skips=skips_arr[ctemp])
-  r, thi, thd, t = path_for_video(2*np.pi*freq,l,rmin=depth_l[ctemp],skips=skips_arr[ctemp])
-  conta = 1
-  for i in range(len(t)-1): # if duplicate
-    if t[i+1] == t[i]:
-      t[i+1] = t[i+1]+0.00000001*conta
-      conta += 1
-    else: pass
-  print(l,max(t))
-  fr   = interp1d(t,r,kind='linear')
-  fthd = interp1d(t,thd,kind='linear')
-  fthi = interp1d(t,thi,kind='linear')
-  radio.append(fr(tt))
-  thiz.append(fthi(tt)), thde.append(fthd(tt))
-  tiempo.append(tt)
-  if np.max(t)<tmin:
-    tmin = np.max(t)
-    temp = ctemp
-  else: pass
-  ctemp += 1
-
-var_dir = {}
-a = 81*np.pi/180
-t0 = np.linspace(a,np.pi-a,1000)
-nn = 10
-
-for i in range(1,modes+1):
-  var_dir['p_r%d'%i] = []
-  var_dir['p_th%diz'%i], var_dir['p_th%dde'%i] = [], []
 
 
-# -- Begin of plot --
-counter = 0
-ttt = tiempo[temp]
-for i in range(0,len(ttt),1):
-  if i==len(ttt)-1:
-    dt = ttt[i]-ttt[i-1]
-  else:
-    dt = ttt[i+1]-ttt[i]
-  f=plt.figure(figsize=(16,5.5))
-  f.subplots_adjust(bottom=0.07, left=0.05, right=0.96, top=0.95, \
-      wspace=0.0, hspace=0.0)
-  stamp = int(ttt[i]//nn)
 
-  for j in range(1,modes+1):
-    p_r = var_dir['p_r%d'%j]
-    p_thiz = var_dir['p_th%diz'%j]
-    p_thde = var_dir['p_th%dde'%j]
-
-    p_r.append(radio[j-1][i])
-    p_thiz.append(thiz[j-1][i]), p_thde.append(thde[j-1][i])
-    ap_r    = np.array(p_r)
-    ap_thiz, ap_thde = np.array(p_thiz), np.array(p_thde)
-    x0, y0 = ap_r*np.cos(ap_thiz+np.pi/2), ap_r*np.sin(ap_thiz+np.pi/2)
-    x2, y2 = ap_r*np.cos(ap_thde+np.pi/2), ap_r*np.sin(ap_thde+np.pi/2)
-    if j==1:
-      plt.plot([0],[0],'white',label='Time: %4.0f s'%ttt[i])
-      plt.plot(x0,y0,'-',linewidth=1.5, color=ccc[j-1])
-      plt.plot(x2,y2,'-',linewidth=1.5, color=ccc[j-1])
-    else:
-      plt.plot(x0,y0,'-',linewidth=1.5, color=ccc[j-1])
-      plt.plot(x2,y2,'-',linewidth=1.5, color=ccc[j-1])
+def plot_video_paths(same_w=True,same_l=False):
+  """
+    Plots for either different frequencies or degree number
+  """
+  if same_l:
+    """
+      Plots a sequence of ray paths inside the Sun for the same degree
+      number and different frequency.
+    """
+    l = 1000
+    from matplotlib.pyplot import cm
+    nu = np.arange(0.005,0.0111,0.0001)
+    longi = len(nu)
+    radio, thiz, thde, tiempo, tmin, ctemp = [], [], [], [], 1e8, 0
+    var_dir = {}
+    a=82.5*np.pi/180
+    ccc = ['orange','g','r','b','purple','gold','lime','deeppink','cyan']
+    t0 = np.linspace(a,np.pi-a,1000)
+    for i in nu:
+      nombre = i*1000
+      print('Frequency \u03BD=%.2f mHz'%nombre,end=' ')
+      if i < 0.007:
+        r, thi, thd, t = path_for_video(2*np.pi*i,l=l,rmin=0.9,skips=5)
+      else:
+        r, thi, thd, t = path_for_video(2*np.pi*i,l=l,rmin=0.9,skips=3)
+      print('Done')
+      fr   = interp1d(t,r,kind='linear')
+      fthd = interp1d(t,thd,kind='linear')
+      fthi = interp1d(t,thi,kind='linear')
+      T = np.max(t)
+      tt = np.arange(0,T,1)
+      radio.append(fr(tt))
+      thiz.append(fthi(tt)), thde.append(fthd(tt))
+      tiempo.append(tt)
+      print(tt[-1])
+    
+    nn = 10
+    for i in nu*1000:
+      var_dir['p_r%.1f'%i] = []
+      var_dir['p_th%.1fiz'%i], var_dir['p_th%.1fde'%i] = [], []
+    
+    counter = 0
+    for i in range(0,4001,10):
+      f=plt.figure(figsize=(17,8))
+      f.subplots_adjust(bottom=0.07, left=0.05, right=0.96, top=0.95, \
+          wspace=0.0, hspace=0.0)
+      stamp = int(tt[i]//nn)
+    
+      colorin=iter(cm.rainbow(np.linspace(0,1,len(nu))))
+      for j in range(len(nu)):
+        cl=next(colorin)
+        name = nu[j]*1000
+        p_r = var_dir['p_r%.1f'%name]
+        p_thiz = var_dir['p_th%.1fiz'%name]
+        p_thde = var_dir['p_th%.1fde'%name]
+        p_r.append(radio[j][i])
+        p_thiz.append(thiz[j][i]), p_thde.append(thde[j][i])
+        ap_r    = np.array(p_r)
+        ap_thiz, ap_thde = np.array(p_thiz), np.array(p_thde)
+        x0, y0 = ap_r*np.cos(ap_thiz+np.pi/2), ap_r*np.sin(ap_thiz+np.pi/2)
+        x2, y2 = ap_r*np.cos(ap_thde+np.pi/2), ap_r*np.sin(ap_thde+np.pi/2)
+        if j==0:
+          plt.plot([0],[0],'white',label='Time: %4.0f s'%tt[i])
+        else:
+          pass
+        plt.plot(x0,y0,x2,y2,'-',linewidth=1.5, color=cl)
+        #plt.plot(x2,y2,'-',linewidth=1.5, color=c)
+        
+      colorin=iter(cm.rainbow(np.linspace(0,1,len(nu))))
+      for k in range(len(nu)):
+        cl=next(colorin)
+        namen = nu[k]*1000
+        #plt.plot([0],[0],color=cl,label=r'$\nu=$%.1f mHz'%namen)
+    
+      plt.plot(np.cos(t0),np.sin(t0),'k')
+      plt.xlim([-1.1*np.cos(a),1.1*np.cos(a)])
+      plt.ylim([0.93,1.01])
+      plt.axes().set_aspect('equal')
+      plt.plot(0.95*np.cos(t0),0.95*np.sin(t0),ls='dotted',color='gray',lw=1.0)
+      plt.plot(0.96*np.cos(t0),0.96*np.sin(t0),'--',color='gray',lw=1)
+      plt.plot(0.97*np.cos(t0),0.97*np.sin(t0),ls='dotted',color='gray',lw=1.0)
+      plt.plot(0.98*np.cos(t0),0.98*np.sin(t0),'--',color='gray',lw=1)
+      plt.plot(0.99*np.cos(t0),0.99*np.sin(t0),ls='dotted',color='gray',lw=1.0)
+      plt.legend(loc=3)
+      if i==0:
+        plt.savefig('IMAGES2/pic.%04ds.png'%int(tt[i]))
+      else:
+        if stamp == counter:
+          pass
+        else:
+          plt.savefig('IMAGES2/pic.%04ds.png'%int(counter+1))
+          counter += 1
+      porc = i/len(tt)*100
+      print('Time: %.2f s.  Frame %d of %d (%.2f %s)  Time stamp %d. '
+             %(tt[i],i,len(tt),porc,chr(37),stamp))
+      plt.close('all')
+    
+  if same_w:
+    """
+      Plot a sequence of images of time intervals of the paths inside the Sun
+      for different degree number with the same frequency
+      temp: index array with the smallest maximum time.
+      tmin: seed to start temp
+    """
+    freq = 0.005 # linear frequency
+    radio, thiz, thde, tiempo, tmin, ctemp = [], [], [], [], 1e8, 0
+    skips_arr = [2,3,3,4,5,7,8,12,13,14]  # Number of skips on photosphere
+    depth_l = [0.6,0.95,0.97,0.97,0.98,0.98,0.99,0.994,0.997] #turning point
+    l_array = [100, 300, 400, 500, 700, 900,1000,1200, 1700]
+    ccc = ['orange','g','r','b','purple','gold','lime','deeppink','cyan']
+    modes = len(l_array) # To loop over the number of modes
+    T = 3600
+    tt = np.arange(0,T+1,1)
+    for l in l_array:
+      r, thi, thd, t = path_for_video(2*np.pi*freq,l,rmin=depth_l[ctemp],skips=skips_arr[ctemp])
+      conta = 1
+      for i in range(len(t)-1): # if there is a duplicate value in time
+        if t[i+1] == t[i]:
+          t[i+1] = t[i+1]+0.00000001*conta
+          conta += 1
+        else: pass
+      print('Degree $d, max time: %.2f s'%(l,max(t)))
+      fr   = interp1d(t,r,kind='linear')
+      fthd = interp1d(t,thd,kind='linear')
+      fthi = interp1d(t,thi,kind='linear')
+      radio.append(fr(tt))
+      thiz.append(fthi(tt)), thde.append(fthd(tt))
+      tiempo.append(tt)
+      if np.max(t)<tmin:
+        tmin = np.max(t)
+        temp = ctemp
+      else: pass
+      ctemp += 1
+    
+    var_dir = {} # Create a dictionaty to store arrays
+    a = 81*np.pi/180  # Angle of the plot
+    t0 = np.linspace(a,np.pi-a,1000)
+    nn = 10  # To make time stamp: how many seconds an image should be saved
+    
+    for i in range(1,modes+1):
+      var_dir['p_r%d'%i] = []
+      var_dir['p_th%diz'%i], var_dir['p_th%dde'%i] = [], []
+    
+    # -- Begin of plot --
+    counter = 0
+    ttt = tiempo[temp]
+    for i in range(0,len(ttt),1):
+      if i==len(ttt)-1:
+        dt = ttt[i]-ttt[i-1]
+      else:
+        dt = ttt[i+1]-ttt[i]
+      f=plt.figure(figsize=(16,5.5))
+      f.subplots_adjust(bottom=0.07, left=0.05, right=0.96, top=0.95, \
+          wspace=0.0, hspace=0.0)
+      stamp = int(ttt[i]//nn)
+    
+      for j in range(1,modes+1):
+        p_r = var_dir['p_r%d'%j]
+        p_thiz = var_dir['p_th%diz'%j]
+        p_thde = var_dir['p_th%dde'%j]
+    
+        p_r.append(radio[j-1][i])
+        p_thiz.append(thiz[j-1][i]), p_thde.append(thde[j-1][i])
+        ap_r    = np.array(p_r)
+        ap_thiz, ap_thde = np.array(p_thiz), np.array(p_thde)
+        x0, y0 = ap_r*np.cos(ap_thiz+np.pi/2), ap_r*np.sin(ap_thiz+np.pi/2)
+        x2, y2 = ap_r*np.cos(ap_thde+np.pi/2), ap_r*np.sin(ap_thde+np.pi/2)
+        if j==1:
+          plt.plot([0],[0],'white',label='Time: %4.0f s'%ttt[i])
+          plt.plot(x0,y0,'-',linewidth=1.5, color=ccc[j-1])
+          plt.plot(x2,y2,'-',linewidth=1.5, color=ccc[j-1])
+        else:
+          plt.plot(x0,y0,'-',linewidth=1.5, color=ccc[j-1])
+          plt.plot(x2,y2,'-',linewidth=1.5, color=ccc[j-1])
+      
+      for k in range(modes):
+        plt.plot([0],[0],color=ccc[k],label='$l=$%d'%l_array[k])
+    
+      plt.plot(np.cos(t0),np.sin(t0),'k')
+      plt.plot(0.95*np.cos(t0),0.95*np.sin(t0),ls='dotted',color='gray',lw=1.0)
+      plt.plot(0.96*np.cos(t0),0.96*np.sin(t0),'--',color='gray',lw=1)
+      plt.plot(0.97*np.cos(t0),0.97*np.sin(t0),ls='dotted',color='gray',lw=1.0)
+      plt.plot(0.98*np.cos(t0),0.98*np.sin(t0),'--',color='gray',lw=1)
+      plt.plot(0.99*np.cos(t0),0.99*np.sin(t0),ls='dotted',color='gray',lw=1.0)
+      plt.legend(loc=3)
+      freq_mHz = freq*1000
+      plt.text(1.007*np.cos(a+0.03),1.007*np.sin(a+0.03),r'$\nu$=%.1f mHz'%freq_mHz)
+      plt.axes().set_aspect('equal')
+      plt.ylim([0.94,1.01])
+      plt.xlim([-1.1*np.cos(a),1.1*np.cos(a)])
+      if i==0:
+        plt.savefig('IMAGES/pic.%04ds.png'%int(ttt[i]))
+      else:
+        if stamp == counter:
+          pass
+        else:
+          plt.savefig('IMAGES/pic.%04ds.png'%int(counter+1))
+          counter += 1
+      porc = i/len(ttt)*100
+      print('Time: %.2f s.  Dt: %.4f s.  Frame %d of %d (%.2f %s)  Time stamp %d. TT %f'
+             %(ttt[i],dt,i,len(ttt),porc,chr(37),stamp,tiempo[0][i]))
+      plt.close('all')
+  return None
   
-  for k in range(modes):
-    plt.plot([0],[0],color=ccc[k],label='$l=$%d'%l_array[k])
 
-  plt.plot(np.cos(t0),np.sin(t0),'k')
-  plt.plot(0.95*np.cos(t0),0.95*np.sin(t0),ls='dotted',color='gray',lw=1.0)
-  plt.plot(0.96*np.cos(t0),0.96*np.sin(t0),'--',color='gray',lw=1)
-  plt.plot(0.97*np.cos(t0),0.97*np.sin(t0),ls='dotted',color='gray',lw=1.0)
-  plt.plot(0.98*np.cos(t0),0.98*np.sin(t0),'--',color='gray',lw=1)
-  plt.plot(0.99*np.cos(t0),0.99*np.sin(t0),ls='dotted',color='gray',lw=1.0)
-  plt.legend(loc=3)
-  freq_mHz = freq*1000
-  plt.text(1.007*np.cos(a+0.03),1.007*np.sin(a+0.03),r'$\nu$=%.1f mHz'%freq_mHz)
-  plt.axes().set_aspect('equal')
-  plt.ylim([0.94,1.01])
-  plt.xlim([-1.1*np.cos(a),1.1*np.cos(a)])
-  if i==0:
-    plt.savefig('IMAGES/pic.%04ds.png'%int(ttt[i]))
+
+import mpl_toolkits.mplot3d.axes3d as axes3d
+from matplotlib.colors import LinearSegmentedColormap
+r0, thi0, thd0, t0 = path_for_video(w=2*np.pi*0.005,l=1500,rmin=0.98,skips=1,res=3000)  
+
+thi0 += np.pi/2
+thd0 += np.pi/2
+r0 = r0
+maxth = np.max(thi0-np.pi/2)*1
+#print(maxth*180/np.pi)
+#maxth = np.pi/20
+
+
+
+
+# part a
+tt   = np.linspace(min(t0),max(t0),3000)
+print(t0[-1],tt[-1], "len ",len(t0),len(tt))
+fthd = interp1d(t0,thd0)
+fr   = interp1d(t0,r0)
+
+idx     = np.argmin(fr(tt))
+tnew0   = tt[0:idx]
+tnew1   = tt[idx::]
+
+uu = np.linspace(-np.sin(maxth*1.11),np.sin(maxth*1.11),100)
+vv = np.linspace(-np.sin(maxth*1.11),np.sin(maxth*1.11),100)
+UU, VV = np.meshgrid(uu, vv)
+ZZ = np.sqrt(1-UU**2-VV**2)
+
+rnew0   = fr(tnew0)
+thdnew0 = fthd(tnew0)
+rnew1   = fr(tnew1)
+thdnew1 = fthd(tnew1)
+
+xn = r0*np.cos(thd0)
+yn = r0*np.sin(thd0)
+xn0 = rnew0*np.cos(thdnew0)
+yn0 = rnew0*np.sin(thdnew0)
+f_yxa = interp1d(yn0,xn0)
+f_xy = interp1d(xn,yn)
+f_tt = interp1d(t0,yn)
+xn1 = rnew1*np.cos(thdnew1)
+yn1 = rnew1*np.sin(thdnew1)
+f_yxb = interp1d(yn1,xn1)
+
+ttt=np.linspace(min(tnew0),max(tnew1),100)
+ft0= np.linspace(min(tnew0),max(tnew0),100)
+ft1= np.linspace(min(tnew1),max(tnew1),100)
+u  = np.linspace(min(xn),max(xn),100)
+u0 = np.linspace(min(yn0),max(yn0),100)
+v0 = np.linspace(np.pi/6,(11/6)*np.pi,100)
+u1 = np.linspace(min(yn1),max(yn1),100)
+v1 = np.linspace(np.pi/6,(11/6)*np.pi,100)
+fu = interp1d(ttt,u)
+fu0= interp1d(ft0,np.flip(u0))
+fu0b= interp1d(ft0,u0)
+fu1= interp1d(ft1,u1)
+U0, V0 = np.meshgrid(u0, v0)
+U1, V1 = np.meshgrid(u1, v1)
+
+Y0 = U0
+X0 = f_yxa(U0)*np.cos(V0+140*np.pi/180)
+Z0 = f_yxa(U0)*np.sin(V0+140*np.pi/180)
+Y1 = U1
+X1 = f_yxb(U1)*np.cos(V1+140*np.pi/180)
+Z1 = f_yxb(U1)*np.sin(V1+140*np.pi/180)
+
+xxa = interp2d(u0,v0,X0)
+yya = interp2d(u0,v0,U0)
+zza = interp2d(u0,v0,Z0)
+xxb = interp2d(u1,v1,X1)
+yyb = interp2d(u1,v1,U1)
+zzb = interp2d(u1,v1,Z1)
+
+
+contador = 0
+cmap_n = 'brg'
+cmap_r = cmap_n + '_r'
+cmap = plt.get_cmap(cmap_n)
+colors = cmap(np.linspace(0.5, 1, cmap.N // 2))
+cmap2 = LinearSegmentedColormap.from_list('Upper Half', colors)
+cmaps = plt.get_cmap(cmap_r)
+colorss = cmaps(np.linspace(0.5, 1, cmaps.N // 2))
+cmap3 = LinearSegmentedColormap.from_list('Lower Half', colorss)
+#cmap_n=LinearSegmentedColormap.from_list('name',['blue','blue'])
+cmap2 = cmap3 = cmap_n
+MM = 1
+for i in np.arange(MM+2,200-2,MM):
+  print("index %.2f"%i)
+  fig = plt.figure(figsize=(12,9))
+  fig.subplots_adjust(bottom=0.00, left=-0.10, right=1.1, top=1.1, \
+      wspace=0.0, hspace=0.0)
+  ax = fig.add_subplot(1, 1, 1, projection='3d')
+  RSMm = RSun/1e8
+  if i<100:
+    NN = 15
+    #for j in range(1,NN+1):
+    #  if contador >= j:
+    #    X3a = xxa(fu0(ft0[i-MM*(j+1):i]),v0)
+    #    Y3a = yya(fu0(ft0[i-MM*(j+1):i]),v0)
+    #    Z3a = zza(fu0(ft0[i-MM*(j+1):i]),v0)
+    #    ax.plot_surface(Z3a*RSMm, X3a*RSMm, Y3a*RSMm-RSMm, alpha=0.6*(NN+1-j)/NN, cmap=cmap2)
+    #X3a = xxa(fu0(ft0[i-MM:i]),v0)
+    #Y3a = yya(fu0(ft0[i-MM:i]),v0)
+    #Z3a = zza(fu0(ft0[i-MM:i]),v0)
+    X3a = xxa(fu0(ft0[0:i]),v0)
+    Y3a = yya(fu0(ft0[0:i]),v0)
+    Z3a = zza(fu0(ft0[0:i]),v0)
+    ax.plot_surface(Z3a*RSMm, X3a*RSMm, Y3a*RSMm-RSMm, alpha=0.7, cmap=cmap2)
+    ax.scatter3D(Z3a[0,:]*RSMm, X3a[0,:]*RSMm, 
+        Y3a[0,:]*RSMm-RSMm,linestyle='--', c='k',s=3)
+    ax.set_title('Time: %.2f s'%ft0[i], y=0.9, x=0.75)
   else:
-    if stamp == counter:
-      pass
-    else:
-      plt.savefig('IMAGES/pic.%04ds.png'%int(counter+1))
-      counter += 1
-  porc = i/len(ttt)*100
-  print('Time: %.2f s.  Dt: %.4f s.  Frame %d of %d (%.2f %s)  Time stamp %d. TT %f'
-         %(ttt[i],dt,i,len(ttt),porc,chr(37),stamp,tiempo[0][i]))
+    X3b = xxb(fu1(ft1[0:i-100+2]),v1)
+    Y3b = yyb(fu1(ft1[0:i-100+2]),v1)
+    Z3b = zzb(fu1(ft1[0:i-100+2]),v1)
+    ax.plot_surface(Z0*RSMm, X0*RSMm, Y0*RSMm-RSMm, alpha=0.8, cmap=cmap2)
+    ax.plot_surface(Z3b*RSMm, X3b*RSMm, Y3b*RSMm-RSMm, alpha=0.8, cmap=cmap3)
+    ax.scatter3D(Z0[0,:]*RSMm, X0[0,:]*RSMm, 
+        Y0[0,:]*RSMm-RSMm,linestyle='--', c='k',s=3)
+    ax.scatter3D(Z3b[0,:]*RSMm, X3b[0,:]*RSMm, 
+        Y3b[0,:]*RSMm-RSMm,linestyle='--', c='k',s=3)
+    ax.set_title('Time: %.2f s'%ft1[i-100+2], y=0.9, x=0.75)
+  ax.plot_surface(UU*RSMm, VV*RSMm, ZZ*RSMm-RSMm, alpha=0.2, color='blue')
+  #ax.scatter3D(u[0:int(i/2)]*np.cos(34*np.pi/18)*RSMm, u[0:int(i/2)]*np.sin(34*np.pi/18)*RSMm, 
+  #    f_xy(fu(ttt[0:int(i/2)]))*RSMm-RSMm,linestyle='--', c='k',s=1)
+  #plt.axes().set_aspect('equal')
+  #ax.set_aspect('equal')
+  ax.set_box_aspect((1, 1, 0.5))
+  ax.set_xlabel('x [Mm]',labelpad=20)
+  ax.set_ylabel('y [Mm]',labelpad=20)
+  ax.set_zlabel(r'Depth $r$ [Mm]',labelpad=20)
+  ax.set_ylim([-10,10])
+  ax.set_xlim([-10,10])
+  #ax.set_zlim([(0.995-1)*RSMm,0])
+  ax.set_zlim([-5,0])
+  #plt.tight_layout()
+  plt.savefig('IMAGES3/pic.%04ds.png'%contador)
   plt.close('all')
-
-
+  contador += 1
+  #plt.show()
 
 
 
