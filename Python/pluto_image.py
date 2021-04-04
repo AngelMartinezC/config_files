@@ -135,18 +135,21 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
       yran = D.x2
       VX1 = D.vx1
       VX2 = D.vx2
-      BX1 = D.Bx1
-      BX2 = D.Bx2
+      if (var == 'mag_b1') or (var == 'Bx1'):
+        BX1 = D.Bx1
+      if (var == 'mag_b2') or (var == 'Bx2'):
+        BX2 = D.Bx2
+      if (var == 'mag_b3') or (var == 'Bx3'):
+        BX3 = D.Bx3
 
   if unit is None: unit = 1
-    
   if vmin is None: vmin = np.min(variable)*unit
   if vmax is None: vmax = np.max(variable)*unit
 
   if log:
     variable  = np.log10(variable)
   else:
-    pass 
+    pass
 
   if image:
     I = pp.Image()
