@@ -49,9 +49,10 @@ def image(i):
 s = time.time()
 
 #num_cores = multiprocessing.cpu_count()
+number = int(os.system('ls dbl_files/rho* | wc -l').read())
 num_cores = 2
-processed_list = Parallel(n_jobs=num_cores)(delayed(image)(i) 
-    for i in range(0,401,1))
+processed_list = Parallel(n_jobs=num_cores)(delayed(image)(i)
+    for i in range(0,number,1))
 
 print("Time spent {:.2f} s".format(time.time()-s))
 print("END")
