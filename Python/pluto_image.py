@@ -18,13 +18,19 @@ import sys
 plt.rcParams.update({'font.size': 18})
 
 
+
 #p = sys.argv[1]
 def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     cbar=True, title=r'Density $\rho$', vmin=None, vmax=None, Mm=True, \
     Mmx=True, Mmy=True, cmap='jet', figsize=(8,10), labelpad=10.0, \
-    cbarlabel=r'Density ($\times$10$^{10}$) [gr cm$^{-3}$]', pad=0.05, 
+    cbarlabel=r'Density ($\times$10$^{6}$) [gr cm$^{-3}$]', pad=0.05, 
     dim=2, n=0, dslice='12', unit=None, diff=None, step=1, image=True,\
     wdir=None, vectorial=False, vecB=False, log=False,**kwargs):
+  """
+    major change:
+    cbarlabel=r'Density ($\times$10$^{6}$) [gr cm$^{-3}$]' by default,
+    given the unit density in definitions is set to 1e-6
+  """
 
   if wdir is None:
     wdir = os.popen('echo `pwd`/').read()
