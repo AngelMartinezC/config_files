@@ -1,13 +1,13 @@
 #include "pluto.h"
 //#include "interpolation.h"
 
-#define yres_ang    304
-#define xres_ang    150
-#define ROWS_ang    2482
-#define COLS_ang    6
+#define yres_ang    304         /* 4 pixels more than y resolution */
+#define xres_ang    150         /* x resolution (not used) */
+#define ROWS_ang    2482        /* Number of rows in solar model S */
+#define COLS_ang    6           /* Number of columns S-model */
 #define R_SUN       6.9634e10   /* Sun radius [cm] */
-#define SOL_BOTTOM  1e4
-#define SOL_TOP     0.0
+#define SOL_BOTTOM  1e4         /* Depth of simulation (as pluto_S.ini */
+#define SOL_TOP     0.0         /* Photosphere */
 
 
 void   linear_interp(double X[ROWS_ang], double Y[ROWS_ang], double a, 
