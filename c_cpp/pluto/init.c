@@ -1,13 +1,14 @@
-/* First attempt to evolve solar interior conditions from the PLUTO module. 
- * 
+/* Attempt to evolve solar interior conditions from the PLUTO module. 
+ *
+ * if change DEPTH, chande 100/6 for photosphere calibration (zero depth).
  *
  */
-
 
 #include "pluto.h"
 
 #define x_range   150  /* Pixels in x1-direction */
 #define y_range   300  /* Pixels in x2-direction */
+#define DEPTH   1.0e4  /* Depth from solar surface */
 
 double gravity_vector[y_range];
 double gravity_vector_in[y_range];
@@ -15,7 +16,7 @@ int    a          = 0;      /* Counter to initialize global gravity array */
 double T_f        = 1.5;    /* Fraction of the temp. inside sunspot */
 double Bext       = 0.1;    /* External magnetic field Gauss (constant)*/
 double Bint       = 1000.0; /* Internal magnetic field Gauss (constant)*/
-double radius     = 0.0e3;  /* Radius of the sunspot */
+double radius     = 0.0e3;  /* Radius of the perfectly circular umbra */
 double press_unit = sqrt(4*CONST_PI*UNIT_DENSITY*pow(UNIT_VELOCITY,2));
 int    radtopix(double x);
 void   gravity_read_data(void);
@@ -309,8 +310,8 @@ void   gravity_read_data(void){
   
 
 int    radtopix(double x){
-  int     lim = 300;
-  double yran = 1.0e4;
+  int     lim = y_range;
+  double yran = DEPTH;  /* 100/6 to correct for zero of radius photosphere */
   double result = (double)lim*(x-100.0/6.0)/yran;
   return round(result);
 }
