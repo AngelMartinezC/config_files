@@ -25,7 +25,7 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     Mmx=True, Mmy=True, cmap='jet', figsize=(8,10), labelpad=10.0, \
     cbarlabel=r'Density ($\times$10$^{6}$) [gr cm$^{-3}$]', pad=0.05, 
     dim=2, n=0, dslice='12', unit=None, diff=None, step=1, image=True,\
-    wdir=None, vectorial=False, vecB=False, log=False,**kwargs):
+    wdir=None, vectorial=False, vecB=False, log=False,vecColor='k',**kwargs):
   """
     major change:
     cbarlabel=r'Density ($\times$10$^{6}$) [gr cm$^{-3}$]' by default,
@@ -183,7 +183,7 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
         else:
           velxcong = T.congrid(VX1.T,newdims,method='linear')
           velycong = T.congrid(VX2.T,newdims,method='linear')
-        plt.gca().quiver(xcong, ycong, velxcong, velycong,color='w') 
+        plt.gca().quiver(xcong, ycong, velxcong, velycong,color=vecColor) 
   else:
     pass
 
