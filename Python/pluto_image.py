@@ -195,7 +195,10 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
         from matplotlib import cm
         cmap = cm.viridis_r
         array = variable
-        masked_array = np.ma.masked_where(array >= solidThresh, array)
+        if solidThresh >= 0:
+          masked_array = np.ma.masked_where(array >= solidThresh, array)
+        else:
+          masked_array = np.ma.masked_where(array <= solidThresh, array)
         cmap.set_bad(color='k')
         variable = masked_array
       else:
