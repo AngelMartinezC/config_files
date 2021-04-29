@@ -25,8 +25,9 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
     Mmx=True, Mmy=True, cmap='jet', figsize=(8,10), labelpad=10.0, \
     cbarlabel=r'Density ($\times$10$^{6}$) [gr cm$^{-3}$]', pad=0.05, 
     dim=2, n=0, dslice='12', unit=None, diff=None, step=1, image=True,\
-    wdir=None, vectorial=False, vecB=False, log=False,vecColor='k', \
-    solid=False, solidThresh=10000, **kwargs):
+    wdir=None, vectorial=False, vecB=False, vecV=True, log=False, \
+    vecColor='k', solid=False, solidThresh=10000, **kwargs):
+
   """
     major change:
     cbarlabel=r'Density ($\times$10$^{6}$) [gr cm$^{-3}$]' by default,
@@ -142,12 +143,14 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
       yran = D.x2
       VX1 = D.vx1
       VX2 = D.vx2
-      if (var == 'mag_b1') or (var == 'Bx1'):
-        BX1 = D.Bx1
-      if (var == 'mag_b2') or (var == 'Bx2'):
-        BX2 = D.Bx2
-      if (var == 'mag_b3') or (var == 'Bx3'):
-        BX3 = D.Bx3
+      BX1 = D.Bx1
+      BX2 = D.Bx2
+      #if (var == 'mag_b1') or (var == 'Bx1'):
+      #  BX1 = D.Bx1
+      #if (var == 'mag_b2') or (var == 'Bx2'):
+      #  BX2 = D.Bx2
+      #if (var == 'mag_b3') or (var == 'Bx3'):
+      #  BX3 = D.Bx3
 
   if unit is None: unit = 1
   if vmin is None: vmin = np.min(variable)*unit
@@ -158,6 +161,25 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
   else:
     pass
 
+
+  def vecPlot(vecB, vecV):
+    """
+      Make a quiver plot of vectorial variables over the the image.
+    """
+    T = pp.Tools()
+    newdims = 2*(20,)
+    Xmesh, Ymesh = np.meshgrid(D.x1.T,D.x2.T)
+    xcong = T.congrid(Xmesh,newdims,method='linear')
+    ycong = T.congrid(Ymesh,newdims,method='linear')
+    if vecB:
+      velxcong = T.congrid(BX1.T,newdims,method='linear')
+      velycong = T.congrid(BX2.T,newdims,method='linear')
+    elif vecV:
+      velxcong = T.congrid(VX1.T,newdims,method='linear')
+      velycong = T.congrid(VX2.T,newdims,method='linear')
+    plt.gca().quiver(xcong, ycong, velxcong, velycong,color=vecColor) 
+
+
   if image:
     I = pp.Image()
     if diff:
@@ -166,6 +188,8 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
         label2=ylabel, title=title, cbar=(cbar,'vertical'), vmin=vmin, \
         vmax=vmax, pad=pad, aspect=aspect, figsize=figsize, cmap=cmap, \
         cbarlabel=cbarlabel, labelpad=labelpad, unit=unit, **kwargs)
+      if vectorial:
+        vecPlot(vecB=vecB, vecV=vecV)
     else:
       if solid:
         from matplotlib import cm
@@ -174,25 +198,15 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
         masked_array = np.ma.masked_where(array >= solidThresh, array)
         cmap.set_bad(color='k')
         variable = masked_array
-      else: pass 
+      else:
+        masked_array = variable
       nlinf = pp.nlast_info(w_dir=wdir)
       I.pldisplay(D, masked_array, x1=xran,x2=yran,label1=xlabel,label2=ylabel,\
         title=title,cbar=(cbar,'vertical'), vmin=vmin, vmax=vmax, pad=pad, \
         aspect=aspect, figsize=figsize, cmap=cmap, cbarlabel=cbarlabel, \
         labelpad=labelpad, unit=unit, **kwargs)
       if vectorial:
-        T = pp.Tools()
-        newdims = 2*(20,)
-        Xmesh, Ymesh = np.meshgrid(D.x1.T,D.x2.T)
-        xcong = T.congrid(Xmesh,newdims,method='linear')
-        ycong = T.congrid(Ymesh,newdims,method='linear')
-        if vecB:
-          velxcong = T.congrid(BX1.T,newdims,method='linear')
-          velycong = T.congrid(BX2.T,newdims,method='linear')
-        else:
-          velxcong = T.congrid(VX1.T,newdims,method='linear')
-          velycong = T.congrid(VX2.T,newdims,method='linear')
-        plt.gca().quiver(xcong, ycong, velxcong, velycong,color=vecColor) 
+        vecPlot(vecB=vecB, vecV=vecV)
   else:
     pass
 
