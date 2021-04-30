@@ -32,6 +32,6 @@
 #define  UNIT_DENSITY                   1.0e-6
 #define  UNIT_LENGTH                    1.0e5
 #define  UNIT_VELOCITY                  1.0e5
-#define  RAD_SUN                        6.9634e2
+#define  RAD_SUN                        6.9634e5
 
 /* [End] user-defined constants (do not change this line) */
