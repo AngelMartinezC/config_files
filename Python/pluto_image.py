@@ -141,10 +141,13 @@ def image(frame, var='density', aspect='auto', xlabel='x', ylabel='y', \
   else:
       xran = D.x1
       yran = D.x2
+      #if os.path.exists(wdir+"vx*.*"):
+      #  print('here VVVVV')
       VX1 = D.vx1
       VX2 = D.vx2
-      BX1 = D.Bx1
-      BX2 = D.Bx2
+      if os.path.exists(wdir+"Bx1.0000.dbl"):
+        BX1 = D.Bx1
+        BX2 = D.Bx2
       #if (var == 'mag_b1') or (var == 'Bx1'):
       #  BX1 = D.Bx1
       #if (var == 'mag_b2') or (var == 'Bx2'):
