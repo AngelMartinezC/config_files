@@ -1,2 +1,4 @@
-__pycache__/
+*pycache*/
+*pycache*/*.pyc
+*.pyc
 *.py[cod]
