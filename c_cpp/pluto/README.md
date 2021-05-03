@@ -1,9 +1,6 @@
-# Considerations:
+# Solar Folder:
 
+See `pluto.ini` initialization file for needed output folders.
 
-## For parallel runs:
-If parallel, log files will be written on log folder
+`density.dbl`, `pressure.dbl` and `grid.out` files from solar model folder are required to run `init.c` initialization file.
 
-
-## Folders:
-A 'dbl_files' folder is needed for output
