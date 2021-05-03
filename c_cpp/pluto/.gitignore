@@ -1,5 +1,5 @@
 *.o
-*.out
+*conf.out
 
 makefile
 pluto
