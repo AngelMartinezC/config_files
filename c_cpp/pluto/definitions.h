@@ -32,6 +32,6 @@
 #define  UNIT_DENSITY                   1.0e-6
 #define  UNIT_LENGTH                    1.0e5
 #define  UNIT_VELOCITY                  1.0e5
-#define  PI                             3.141592653
+#define  INTERNAL_BOUNDARY              YES
 
 /* [End] user-defined constants (do not change this line) */
