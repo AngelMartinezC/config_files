@@ -1,0 +1,10 @@
+*.o
+*.out
+
+makefile
+pluto
+
+dbl_files/
+IMAGES/
+log_files/
+
