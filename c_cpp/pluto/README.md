@@ -39,7 +39,7 @@
 - <span style="color:blue">_SCHEME A_:</span> No magnetic field tube. $B_e=0.1$.
     
   |   |  <span style="color:green">`X2_BEG`</span> | <span style="color:green">`X2_END`</span>  |  <span style="color:violet">`InitDomain`</span> |
-  |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+  |:-:|:-:|:-:|:-:|
   | $\rho$   | $\rho_e$  |  $=$ | $=$ | 
   | $P$      |  $P_{e}$ | $=$  | $=$  |
   | $B_{X2}$ | $B_e$  | $B_e$ | $B_e$ | 
@@ -52,7 +52,7 @@
 - <span style="color:blue">_SCHEME B_:</span> No magnetic field tube. $B_e=X2[j]/1\times 10^3 + 0.1$.
     
   |   |  <span style="color:green">`X2_BEG`</span> | <span style="color:green">`X2_END`</span>  |  <span style="color:violet">`InitDomain`</span> |
-  |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+  |:-:|:-:|:-:|:-:|
   | $\rho$   | $\rho_e$  |  $=$ | $=$ | 
   | $P$      |  $P_{e}$ | $=$  | $=$  |
   | $B_{X2}$ | $B_e$  | $B_e$ | $B_e$ | 
