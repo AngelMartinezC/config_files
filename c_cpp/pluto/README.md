@@ -171,8 +171,17 @@
 - <span style="color:red">_SCHEME 5_</span>: SCHEME 0  but with else `B_EXT = 0.1` fixed in `side == 0`
 
  Magnetic field is going to be set at frame 348 (`5h 48 min`) where the convection is begining to be significant.
+ 
+  1. ~~As "initial" condition (setting all the magnetic field struture suddenly in `1 min`) setting boundary conditions for 3 minutes~~: The magnetic field suppresed by the environment. 
+ 
+  2. ~~As "initial" condition (just temporary magnetic field)~~: Sudden loss of structure.
 
+  3. ~~From `5 h`~~: For the setting time of mangetic field (`5 min`), all is good, then the structure vanishes as there is some greater outside total pressure.
+ 
+  ---
 
+	
+- <span style="color:red">_SCHEME 6_</span>: Two magnetic field lines.
   
  
 </br> </br> </br> </br> </br> </br> 
