@@ -182,8 +182,13 @@
 
 	
 - <span style="color:red">_SCHEME 6_</span>: Two magnetic field lines.
-  
- 
+   
+  ---
+
+	
+- <span style="color:red">_SCHEME 7_</span>: `solar_model_6 folder` of new PLUTO version. Reading model from SM6.
+
+  First reading the gravity force in runtime.
 </br> </br> </br> </br> </br> </br> 
 
 # Is it the same `initDomain` and `side==0` for the first run time? 
