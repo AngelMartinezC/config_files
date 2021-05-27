@@ -1,3 +1,6 @@
+"""
+IMAGE CUBE
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 import pluto_image as pi
