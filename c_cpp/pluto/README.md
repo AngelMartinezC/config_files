@@ -185,12 +185,23 @@
    
   ---
 
+## PLUTO V4.4
 	
 - <span style="color:red">_SCHEME 7_</span>: `solar_model_6 folder` of new PLUTO version. Reading model from SM6.
 
   First reading the gravity force in runtime.
   
-  - What was I thinking! I can save precious run time setting a constant value in boundary instead of reading and interpolating the solar model file. I can store boundary values in an array. :(
+  - What was I thinking! I can save precious run time setting a constant value in boundary instead of reading and interpolating the solar model file. I can store boundary values in an array. :(.
+    
+     - I just did. Running time improves by more than $33\%$. The time for `~1d 4h` is `1h 24min`.
+     
+  ---
+  
+- <span style="color:red">_SCHEME 8_</span>: `solar_model_8 folder` of new PLUTO version. Same as SCHEME 7, but with magnetic field.
+
+  -  `movie_8` improve pressure.
+      
+    
 </br> </br> </br> </br> </br> </br> 
 
 # Is it the same `initDomain` and `side==0` for the first run time? 
