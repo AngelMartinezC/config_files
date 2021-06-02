@@ -200,6 +200,8 @@
 - <span style="color:red">_SCHEME 8_</span>: `solar_model_8 folder` of new PLUTO version. Same as SCHEME 7, but with magnetic field.
 
   -  `movie_8` improve pressure.
+  
+  - Make with MHD continua as Nakariakov, then test the horizontal condition for magnetic field
       
     
 </br> </br> </br> </br> </br> </br> 
