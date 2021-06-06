@@ -199,7 +199,9 @@
   
 - <span style="color:red">_SCHEME 8_</span>: `solar_model_8 folder` of new PLUTO version. Same as SCHEME 7, but with magnetic field.
 
-  -  `movie_8` improve pressure.
+  -  `movie_8` improving pressure for `side==0` does not improve too much. There is the same small dt.
+  
+  - Improve gravity by reading to a constant value but the hole array.
   
   - Make with MHD continua as Nakariakov, then test the horizontal condition for magnetic field
       
