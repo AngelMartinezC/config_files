@@ -38,26 +38,10 @@ void gravity_read_data(void);
 void Init (double *v, double x1, double x2, double x3)
 {
   static int first_call = 1;
-
-  //printf("Pc %f,  Ph %f\n",UNIT_PRESSURE,UNIT_PRESSURE);
-  v[TRC] = 0.0;
-
   /* Read gravity data from hydrostatic equilibrium. */
   if (first_call){ 
     gravity_read_data(); 
   }
-
-  v[RHO] = 1.0;
-  v[PRS] = 1.0;
-  v[VX1] = 0.0;
-  v[VX2] = 0.0;
-  v[VX3] = 0.0;
-  #if PHYSICS == MHD || PHYSICS == RMHD
-  v[BX3] = 0.0;
-  v[AX1] = 0.0;
-  v[AX2] = 0.0;
-  v[AX3] = 0.0;
-  #endif
   first_call = 0;
 }
 
