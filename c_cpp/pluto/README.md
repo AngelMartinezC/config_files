@@ -205,6 +205,9 @@
   
   - Make with MHD continua as Nakariakov, then test the horizontal condition for magnetic field
       
+- <span style="color:red">_SCHEME 9_</span>: `solar_model_9 folder` of new PLUTO version. No magnetic field but reflective boundary conditions on both X-walls.
+
+  - Seems to behave propertly. At least the huge velocities in x-direction are not present and convective-like currents seem to be present.
     
 </br> </br> </br> </br> </br> </br> 
 
