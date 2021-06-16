@@ -209,4 +209,6 @@
 </br> </br> </br> </br> </br> </br> 
 
 # Is it the same `initDomain` and `side==0` for the first run time? 
+
+- check
 <!-- blank line --> 
