@@ -185,9 +185,22 @@
    
   ---
 
-## PLUTO V4.4
+
+
+
+
+ </br>
+
+---
+
+
+</br>
+
+# <span style="color:green">  PLUTO V4.4 </span>
+
+</br> </br>
 	
-- <span style="color:red">_SCHEME 7_</span>: `solar_model_6 folder` of new PLUTO version. Reading model from SM6.
+- <span style="color:blue">_SCHEME 7_</span>: `solar_model_6 folder` of new PLUTO version. Reading model from SM6.
 
   First reading the gravity force in runtime.
   
@@ -197,21 +210,24 @@
      
   ---
   
-- <span style="color:red">_SCHEME 8_</span>: `solar_model_8 folder` of new PLUTO version. Same as SCHEME 7, but with magnetic field.
+- ~~<span style="color:red">_SCHEME 8_</span>:~~ `solar_model_8 folder` of new PLUTO version. Same as SCHEME 7, but with magnetic field.
 
   -  `movie_8` improving pressure for `side==0` does not improve too much. There is the same small dt.
   
   - Improve gravity by reading to a constant value but the hole array.
   
   - Make with MHD continua as Nakariakov, then test the horizontal condition for magnetic field
+
+  ---
       
-- <span style="color:red">_SCHEME 9_</span>: `solar_model_9 folder` of new PLUTO version. No magnetic field but reflective boundary conditions on both X-walls.
+- <span style="color:blue">_**SCHEME 9**_</span>: `solar_model_9 folder` of new PLUTO version. No magnetic field but reflective boundary conditions on both X-walls.
 
   - Seems to behave propertly. At least the huge velocities in x-direction are not noticeable and convective-like currents seem to be present. At `~12 days` of code time, the convective currents are still present.
-    
+   
+ ---
+
+- <span style="color:red">_SCHEME 10_</span>: `solar_model_10 folder`. The mgnetic field is set at `InitDomain`. I should apply this "initial condition" on a stable time.
 </br> </br> </br> </br> </br> </br> 
 
-# Is it the same `initDomain` and `side==0` for the first run time? 
 
-- check
 <!-- blank line --> 
