@@ -227,6 +227,10 @@
  ---
 
 - <span style="color:red">_SCHEME 10_</span>: `solar_model_10 folder`. The mgnetic field is set at `InitDomain`. I should apply this "initial condition" on a stable time.
+
+ ---
+
+- <span style="color:green">_SCHEME 11_</span>: `solar_model_12 folder`. This is an apparent correction to the former two schemes used. First I am going to try the X boundary walls as periodic and then reflective.
 </br> </br> </br> </br> </br> </br> 
 
 
