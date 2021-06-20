@@ -220,7 +220,7 @@
 
   ---
       
-- <span style="color:blue">_**SCHEME 9**_</span>: `solar_model_9 folder` of new PLUTO version. No magnetic field but reflective boundary conditions on both X-walls.
+- <span style="color:blue">_**SCHEME 9, 11**_</span>: `solar_model_9 folder` of new PLUTO version. No magnetic field but boundary conditions on both X-walls (either periodic of reflective, the former seems to be better).
 
   - Seems to behave propertly. At least the huge velocities in x-direction are not noticeable and convective-like currents seem to be present. At `~12 days` of code time, the convective currents are still present.
    
@@ -230,7 +230,16 @@
 
  ---
 
-- <span style="color:green">_SCHEME 11_</span>: `solar_model_12 folder`. This is an apparent correction to the former two schemes used. First I am going to try the X boundary walls as periodic and then reflective.
+- <span style="color:green">_SCHEME 12_</span>: `solar_model_12 folder`. Same as SCHEME 11 with outflow conditon for both X walls.
+
+ ---
+
+- <span style="color:green">_SCHEME 13_</span>: `solar_model_13 folder`. I am going to set a background magnetic field for the same scheme of scheme 11 with straggled components of the magnetic field.
+
+
+ ---
+
+- <span style="color:red">_SCHEME 14_</span>: `solar_model_10 folder`. The mgnetic field is set at `InitDomain`. I should apply this "initial condition" on a stable time.
 </br> </br> </br> </br> </br> </br> 
 
 
