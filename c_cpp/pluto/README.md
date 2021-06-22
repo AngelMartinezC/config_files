@@ -234,12 +234,18 @@
 
  ---
 
-- <span style="color:green">_SCHEME 13_</span>: `solar_model_13 folder`. I am going to set a background magnetic field for the same scheme of scheme 11 with straggled components of the magnetic field.
+- <span style="color:purple">_SCHEME 13_</span>: `solar_model_13 folder`. I am going to set a background magnetic field for the same scheme of scheme 11 with straggled components of the magnetic field.
 
 
  ---
 
-- <span style="color:red">_SCHEME 14_</span>: `solar_model_10 folder`. The mgnetic field is set at `InitDomain`. I should apply this "initial condition" on a stable time.
+- <span style="color:purple">_SCHEME 14_</span>: `solar_model_10 folder`. The mgnetic field is set at `InitDomain`. I should apply this "initial condition" on a stable time.
+
+ ---
+
+- <span style="color:red">_SCHEME 15_</span>: Smaller grid
+
+
 </br> </br> </br> </br> </br> </br> 
 
 
