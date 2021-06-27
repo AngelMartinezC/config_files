@@ -37,11 +37,16 @@ void gravity_read_data(void);
 /* ********************************************************************* */
 void Init (double *v, double x1, double x2, double x3)
 {
+  /* Read just the gravity array. The control of the vector body force is
+     made by reading the thermodynamical varaibles to calculate grad(P)/rho
+     and (NOT YET) j\times B */
   static int first_call = 1;
   /* Read gravity data from hydrostatic equilibrium. */
   if (first_call){ 
     gravity_read_data(); 
   }
+  v[VX1] = v[VX2] = v[VX3] = 0;
+  v[BX1] = v[BX2] = 0;
   first_call = 0;
 }
 
@@ -54,7 +59,6 @@ void InitDomain (Data *d, Grid *grid)
   double *x2 = grid->x[JDIR];
   double *x3 = grid->x[KDIR];
   double Bext;
-  printf("HOLA\n");
   
   id1 = InputDataOpen("density.dbl","grid.out","little",0,CENTER);
   id2 = InputDataOpen("pressure.dbl","grid.out","little",0,CENTER);
