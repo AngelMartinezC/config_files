@@ -230,7 +230,7 @@
 
  ---
 
-- <span style="color:green">_SCHEME 12_</span>: `solar_model_12 folder`. Same as SCHEME 11 with outflow conditon for both X walls.
+- <span style="color:red">_SCHEME 12_</span>: `solar_model_12 folder`. Same as SCHEME 11 with outflow conditon for both X walls.
 
  ---
 
