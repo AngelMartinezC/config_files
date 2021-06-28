@@ -12,12 +12,14 @@
 #include "pluto.h"
 
 
-#define x_range   150  /* Pixels in x1-direction */
-#define y_range   300  /* Pixels in x2-direction */
-#define DEPTH   1.0e4  /* Depth from solar surface */
+#define x_range   NX1  /* Pixels in x1-direction */
+#define y_range   NX2  /* Pixels in x2-direction */
+#define DEPTH     g_domEnd[1]  /* Depth from solar surface */
+#define XLEFT     g_domBeg[0]  /* Limits in x direction */
+#define XRIGHT    g_domEnd[0]
 
-double gravity_vector[y_range];
-double gravity_vector_in[y_range];
+double gravity_vector[500];     /* set a global array to initialize in Init */
+double gravity_vector_in[500];  /* to be called in BodyForceVector */
 //double gravity_vector_new[300][150];//[NX2_TOT][NX3_TOT];
 //int    counter  = 0;      /* Counter to initialize global gravity array */
 double T_f      = 1.5;    /* Fraction of the temp. inside sunspot */
@@ -28,6 +30,7 @@ double radius   = 0.0e3;  /* Radius of the perfectly circular umbra */
 //double radius1    = 0.0e3;  /* radius for different magnetic tubes */
 //double radius2    = 0.0e3;
 //double press_unit = sqrt(4*CONST_PI*UNIT_DENSITY*pow(UNIT_VELOCITY,2));
+int Mmtopix(double x);
 int  radtopix(double x);
 void gravity_read_data(void);
 //void gravity(const Data *d, double array[300][150]);
@@ -339,6 +342,7 @@ void   gravity_read_data(void){
 }
   
 
+/* Calculates the pixel location for a given depth */
 int    radtopix(double x){
   int     lim = y_range;
   double yran = DEPTH;  /* 100/6 to correct for zero of radius photosphere */
@@ -347,6 +351,14 @@ int    radtopix(double x){
   return round(result);
 }
 
+
+/* Calculates the pixel position associated to a physical location on the 
+   grid. Similar to radtopix but for x-direction */
+int Mmtopix(double x){
+  double Dx = (double)x_range;
+  double result = (XRIGHT-XLEFT)*x/Dx + XLEFT;
+  return round(result);
+}
 
 
 void gravity(const Data *d, double array[300][150]){//, double grav[][NX2_TOT][NX3_TOT]){
