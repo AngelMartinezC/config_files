@@ -108,10 +108,19 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
   x1 = grid->x[IDIR];
   x2 = grid->x[JDIR];
   x3 = grid->x[KDIR];
+
+  /* Values taken from the solar model at depth 0 and 10 Mm */
   double RHO_0 = 721.5352397851;
   double PRS_0 = 600725.6887423340;
   double RHO_1 = 0.2737624535;
   double PRS_1 = 14.2569055828;
+
+  /* Space-temporal magnetic field variables */
+  double mleft  = mcenter - 0.5*mwidth; /* limits of the tube */
+  double mright = mcenter + 0.5*mwidth;
+  int mt_start = 54060; /* Time in seconds of the magnetic field setting */
+  int mt_end   = 504181;
+  int ipix;
   //printf("grav bef %f\n",gravity_vector_new[50][0]);
   //gravity(d, gravity_vector_new);
   //printf("grav aft %f\n\n",gravity_vector_new[50][50]);
@@ -122,6 +131,13 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
   if (side == 0) {    /* -- check solution inside domain -- */
     TOT_LOOP(k,j,i){
     Bext = Bext0; //x2[j]/1.0e3 + Bext0;
+    if (g_time>=mt_start && g_time<=mt_end){
+      if (x1[i]>mleft && x1[i]<mright){
+        ipix = Mmtopix(0.0e3);
+        d->Vc[RHO][k][j][i] = 1.01*(d->Vc[RHO][k][j][i]);
+        printf("pix %d\n",ipix);
+      }
+    }
       //if (x1[i]>-radius && x1[i]<radius){ 
       //  //printf("%d  ",i);
       //  /* LIMITS ARE 69 and 83 */
@@ -356,7 +372,7 @@ int    radtopix(double x){
    grid. Similar to radtopix but for x-direction */
 int Mmtopix(double x){
   double Dx = (double)x_range;
-  double result = (XRIGHT-XLEFT)*x/Dx + XLEFT;
+  double result = Dx/(XRIGHT-XLEFT) * (x - XLEFT);
   return round(result);
 }
 
