@@ -243,7 +243,14 @@
 
  ---
 
-- <span style="color:red">_SCHEME 15_</span>: Smaller grid
+- <span style="color:red">_SCHEME 15_</span>: Smaller grid.
+ 
+  - I should use the bigger grid possible
+
+ ---
+
+- <span style="color:purple">_SCHEME 16_</span>: Test the setting of the magnetic field. I am going to try several schemes to get the most stable tube. The start SCHEME is 9, from about 5 days where there is a window of almost steady convective currents (velocity vector field).
+
 
 
 </br> </br> </br> </br> </br> </br> 
