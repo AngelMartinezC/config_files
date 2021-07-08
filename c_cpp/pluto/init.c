@@ -114,28 +114,36 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
   double PRS_0 = 600725.6887423340;
   double RHO_1 = 0.2737624535;
   double PRS_1 = 14.2569055828;
+  double mcenter = -2.31e3; /* Center of magnetic field */
+  double mwidth = 0.5e3;   /* Widht of magnetic field tube */
 
   /* Space-temporal magnetic field variables */
   double mleft  = mcenter - 0.5*mwidth; /* limits of the tube */
   double mright = mcenter + 0.5*mwidth;
-  int mt_start = 54060; /* Time in seconds of the magnetic field setting */
+  int mt_start = 504060; /* Time in seconds of the magnetic field setting */
   int mt_end   = 504181;
-  int ipix;
-  //printf("grav bef %f\n",gravity_vector_new[50][0]);
-  //gravity(d, gravity_vector_new);
-  //printf("grav aft %f\n\n",gravity_vector_new[50][50]);
+  int cpix, ipix;
   //id1 = InputDataOpen("density.dbl","grid.out"," ",0,CENTER);
   //id2 = InputDataOpen("pressure.dbl","grid.out"," ",0,CENTER);
   //printf("\ng_time %d\n",g_stepNumber);
 
   if (side == 0) {    /* -- check solution inside domain -- */
+    cpix = Mmtopix(mcenter);
+    ipix = Mmtopix(-1.1e3);
     TOT_LOOP(k,j,i){
     Bext = Bext0; //x2[j]/1.0e3 + Bext0;
     if (g_time>=mt_start && g_time<=mt_end){
       if (x1[i]>mleft && x1[i]<mright){
-        ipix = Mmtopix(0.0e3);
-        d->Vc[RHO][k][j][i] = 1.01*(d->Vc[RHO][k][j][i]);
-        printf("pix %d\n",ipix);
+        /* set jump conditions for the magnetic field at -1.1 Mm */
+        //d->Vc[RHO][k][j][i] = T_f*(d->Vc[RHO][k][j][ipix]);
+        d->Vc[RHO][k][j][i] = (d->Vc[RHO][k][j][i]);
+        d->Vc[PRS][k][j][i] = d->Vc[PRS][k][j][i] ; //+
+        //d->Vc[PRS][k][j][i] = d->Vc[PRS][k][j][ipix] +
+            //(1.0/(2.0*pow(UNIT_PRESSURE,2)))*
+            //(pow(d->Vc[BX2][k][j][cpix],2)-
+            // pow(d->Vc[BX2][k][j][ipix],2));
+        //d->Vc[BX2][k][j][i] = Bint/UNIT_PRESSURE;
+        d->Vc[BX2][k][j][i] = Bext/UNIT_PRESSURE;
       }
     }
       //if (x1[i]>-radius && x1[i]<radius){ 
