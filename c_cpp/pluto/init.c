@@ -17,6 +17,13 @@
 #define DEPTH     g_domEnd[1]  /* Depth from solar surface */
 #define XLEFT     g_domBeg[0]  /* Limits in x direction */
 #define XRIGHT    g_domEnd[0]
+#define mcenter      -2.63e3   /* Center of magnetic field */
+#define mwidth       0.5e3     /* Width of magnetic field tube */
+#define mleft        mcenter - 0.5*mwidth /* limits of the magnetic tube */
+#define mright       mcenter + 0.5*mwidth
+#define mreference   -1.1e3    /* Value where I get ext reference values */
+#define mt_start     506700    /* Time in seconds of the magnetic field */
+#define mt_end       507821
 
 double gravity_vector[500];     /* set a global array to initialize in Init */
 double gravity_vector_in[500];  /* to be called in BodyForceVector */
@@ -114,59 +121,37 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
   double PRS_0 = 600725.6887423340;
   double RHO_1 = 0.2737624535;
   double PRS_1 = 14.2569055828;
-  double mcenter = -2.31e3; /* Center of magnetic field */
-  double mwidth = 0.5e3;   /* Widht of magnetic field tube */
-
-  /* Space-temporal magnetic field variables */
-  double mleft  = mcenter - 0.5*mwidth; /* limits of the tube */
-  double mright = mcenter + 0.5*mwidth;
-  int mt_start = 504060; /* Time in seconds of the magnetic field setting */
-  int mt_end   = 504181;
-  int cpix, ipix;
+  /* VARIABLES: Space-temporal magnetic field variables */
+  int cpix, rpix;
   //id1 = InputDataOpen("density.dbl","grid.out"," ",0,CENTER);
   //id2 = InputDataOpen("pressure.dbl","grid.out"," ",0,CENTER);
   //printf("\ng_time %d\n",g_stepNumber);
 
-  if (side == 0) {    /* -- check solution inside domain -- */
+  if (g_time>=mt_start && g_time<=mt_end){
     cpix = Mmtopix(mcenter);
-    ipix = Mmtopix(-1.1e3);
+    rpix = Mmtopix(mreference);
+  }
+
+  if (side == 0) {    /* -- check solution inside domain -- */
+    int mml, mmr;
+    mml = Mmtopix(mleft);
+    mmr = Mmtopix(mright);
     TOT_LOOP(k,j,i){
     Bext = Bext0; //x2[j]/1.0e3 + Bext0;
-    if (g_time>=mt_start && g_time<=mt_end){
-      if (x1[i]>mleft && x1[i]<mright){
-        /* set jump conditions for the magnetic field at -1.1 Mm */
-        //d->Vc[RHO][k][j][i] = T_f*(d->Vc[RHO][k][j][ipix]);
-        d->Vc[RHO][k][j][i] = (d->Vc[RHO][k][j][i]);
-        d->Vc[PRS][k][j][i] = d->Vc[PRS][k][j][i] ; //+
-        //d->Vc[PRS][k][j][i] = d->Vc[PRS][k][j][ipix] +
-            //(1.0/(2.0*pow(UNIT_PRESSURE,2)))*
-            //(pow(d->Vc[BX2][k][j][cpix],2)-
-            // pow(d->Vc[BX2][k][j][ipix],2));
-        //d->Vc[BX2][k][j][i] = Bint/UNIT_PRESSURE;
-        d->Vc[BX2][k][j][i] = Bext/UNIT_PRESSURE;
+      if (g_time>=mt_start && g_time<=mt_end){
+        if (x1[i]>mleft && x1[i]<mright){
+          /* set jump conditions for the magnetic field at -1.1 Mm */
+          //d->Vc[RHO][k][j][i] = T_f*(d->Vc[RHO][k][j][rpix]);
+          //d->Vc[BX2][k][j][i] = Bint/UNIT_PRESSURE;
+          //d->Vc[PRS][k][j][i] = d->Vc[PRS][k][j][rpix] ; //+
+          d->Vc[PRS][k][j][i] = d->Vc[PRS][k][j][rpix] +
+              (1.0/(2.0*pow(UNIT_PRESSURE,2)))*
+              (pow(d->Vc[BX2][k][j][cpix],2)-
+               pow(d->Vc[BX2][k][j][rpix],2));
+          d->Vc[RHO][k][j][i] = (d->Vc[RHO][k][j][i]);
+          d->Vc[BX2][k][j][i] = Bext/UNIT_PRESSURE;
+        }
       }
-    }
-      //if (x1[i]>-radius && x1[i]<radius){ 
-      //  //printf("%d  ",i);
-      //  /* LIMITS ARE 69 and 83 */
-      //  d->Vc[BX2][k][j][i] = Bint/UNIT_PRESSURE;
-      //  d->Vc[RHO][k][j][i] = T_f*d->Vc[RHO][k][j][85]; //(T_f);
-      //  d->Vc[PRS][k][j][i] = d->Vc[PRS][k][j][85] + 
-      //      (1.0/(2.0*pow(UNIT_PRESSURE,2)))*
-      //      (pow(d->Vc[BX2][k][j][85],2)-
-      //       pow(d->Vc[BX2][k][j][80],2));
-      //  //d->Vc[PRS][k][j][i] = 1.085(InputDataInterpolate (id2,x1[i],x2[j],x3[k]) +
-      //  //    (1.0/(2.0*pow(UNIT_PRESSURE,2)))*(pow(Bext,2)-pow(Bint,2)));
-      //}
-      //else {
-      //  d->Vc[RHO][k][j][i] = InputDataInterpolate (id1,x1[i],x2[j],x3[k]);
-      //  d->Vc[PRS][k][j][i] = InputDataInterpolate (id2,x1[i],x2[j],x3[k]);
-      //  d->Vc[BX2][k][j][i] = Bext/UNIT_PRESSURE;
-      //  //temp=(d->Vc[PRS][k][j][i]/d->Vc[RHO][k][j][i])*KELVIN*0.672442+1.6e3;
-      //}
-      //d->Vc[BX1][k][j][i] = 0.0;
-      //counter += 1;
-      //printf("counter %d\n",counter);
     }
   }
   
