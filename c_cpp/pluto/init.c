@@ -33,6 +33,7 @@ double T_f      = 1.5;    /* Fraction of the temp. inside sunspot */
 double Bext0    = 0.1;    /* External magnetic field Gauss (constant)*/
 double Bint     = 1000.0; /* Internal magnetic field Gauss (constant)*/
 double radius   = 0.0e3;  /* Radius of the perfectly circular umbra */
+int rpix, cpix;   /* center and reference pixels for mag. field setting */
 //double radius_step= 1.0e3;  /* Radius used for stepping. See SCHEME 5 */
 //double radius1    = 0.0e3;  /* radius for different magnetic tubes */
 //double radius2    = 0.0e3;
@@ -121,8 +122,6 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
   double PRS_0 = 600725.6887423340;
   double RHO_1 = 0.2737624535;
   double PRS_1 = 14.2569055828;
-  /* VARIABLES: Space-temporal magnetic field variables */
-  int cpix, rpix;
   //id1 = InputDataOpen("density.dbl","grid.out"," ",0,CENTER);
   //id2 = InputDataOpen("pressure.dbl","grid.out"," ",0,CENTER);
   //printf("\ng_time %d\n",g_stepNumber);
