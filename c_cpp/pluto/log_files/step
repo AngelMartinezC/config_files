@@ -1,0 +1,11 @@
+#!/bin/bash
+
+cat pluto.0.log | grep step | awk '{print $4/86400, $7}' | sed 's/;//g' > TDT
+cat pluto.0.log | grep Mach | awk '{print $3}' | sed 's/\]//g' > MACH
+
+paste TDT MACH > TIME
+#cat pluto.0.log | grep step | awk '{print $7}' | sed 's/;//g' > TIME
+
+tail -20 pluto.0.log
+gnuplot variables.gpi; gwenview runtime.png
+

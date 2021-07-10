@@ -1,0 +1,22 @@
+# Plot graphs for gnuplot to check in runtime
+plot "TIME" with l lt 4 lw 2 title 'dt'
+replot "TIME" u 1:3 with l lt 14 lw 2 title 'max Mach'
+#set xrange [0:14]
+#set yrange [0:0.7]
+
+# Set a terminal output
+set term png size 1200,700 enhanced font 'Cantarell,16'
+
+# Custom fonts
+set key font "JetBrains Mono,13"
+
+# Output file and plot
+set output 'runtime.png'
+set title 'Variables'
+set style data points
+set xlabel 'Time [days]'
+set grid
+
+# Plot the graphic
+replot
+set term x11
