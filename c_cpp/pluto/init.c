@@ -13,7 +13,7 @@
 
 
 #define x_range   NX1  /* Pixels in x1-direction */
-#define y_range   NX2  /* Pixels in x2-direction */
+#define y_range   2*NX2  /* Pixels in x2-direction */
 #define DEPTH     g_domEnd[1]  /* Depth from solar surface */
 #define XLEFT     g_domBeg[0]  /* Limits in x direction */
 #define XRIGHT    g_domEnd[0]
