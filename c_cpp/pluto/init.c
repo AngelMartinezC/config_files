@@ -41,7 +41,7 @@ int rpix, cpix;   /* center and reference pixels for mag. field setting */
 int Mmtopix(double x);
 int  radtopix(double x);
 void gravity_read_data(void);
-//void gravity(const Data *d, double array[300][150]);
+void gravity(const Data *d);//, double array[300][150]);
 
 
 
@@ -369,7 +369,7 @@ int Mmtopix(double x){
 }
 
 
-void gravity(const Data *d, double array[300][150]){//, double grav[][NX2_TOT][NX3_TOT]){
+void gravity(const Data *d){//, double array[300][150]){//, double grav[][NX2_TOT][NX3_TOT]){
   int i, j, k;
   double rho, prs;
   double dp;
