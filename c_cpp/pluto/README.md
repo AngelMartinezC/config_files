@@ -260,6 +260,11 @@
 - <span style="color:purple">_SCHEME 16_</span>: Test the setting of the magnetic field. I am going to try several schemes to get the most stable tube. The start SCHEME is 9, from about 5 days where there is a window of almost steady convective currents (velocity vector field).
 
 
+- <span style="color:red">_SCHEME 17_</span>: Here I set a great InputDataFile in order to perform a smooth interpolation to be read on Init function. The y_range is set manually because of dynamic variables to 302~304 (in order to preserve ghosts zones). This is based on a new `solar_model_test_2.3` which, with the same grid, is seen to have a stability window beyond `0d 20h` up to `2h`.
+
+  - Setting a mangetic field from stability (no matter the width) crashes the program.
+
+  - Removing magnetic field but mantaining boundary magneticnetic tube conditions does not improve results, ending up with great velocities in x-direction.
 
 </br> </br> </br> </br> </br> </br> 
 
