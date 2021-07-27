@@ -262,7 +262,7 @@
 
 - <span style="color:red">_SCHEME 17_</span>: Here I set a great InputDataFile in order to perform a smooth interpolation to be read on Init function. The y_range is set manually because of dynamic variables to 302~304 (in order to preserve ghosts zones). This is based on a new `solar_model_test_2.3` which, with the same grid, is seen to have a stability window beyond `0d 20h` up to `2h`.
 
-  - Setting a mangetic field from stability (no matter the width) crashes the program.
+  - Setting a mangetic field from stability (from a down convective cell, no matter the width) crashes the program.
 
   - Removing magnetic field but mantaining boundary magneticnetic tube conditions does not improve results, ending up with great velocities in x-direction.
 
