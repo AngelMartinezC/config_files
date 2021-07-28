@@ -266,6 +266,11 @@
 
   - Removing magnetic field but mantaining boundary magneticnetic tube conditions does not improve results, ending up with great velocities in x-direction.
 
+
+- <span style="color:red">_SCHEME 18_</span>: As SCHEME 17 but with different velocity reflection on the `X2_END` $v_y$ component (reflection at 80%).
+
+  - It shows stability. It's like the former one but stretched.
+
 </br> </br> </br> </br> </br> </br> 
 
 
