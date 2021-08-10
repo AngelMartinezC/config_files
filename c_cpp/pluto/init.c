@@ -18,6 +18,7 @@
 #define  mright       mcenter + 0.5*mwidth
 
 
+
 double UNIT_PRESSURE = UNIT_DENSITY*UNIT_VELOCITY*UNIT_VELOCITY;
 double UNIT_MAGNETIC = sqrt(4*CONST_PI*UNIT_DENSITY*pow(UNIT_VELOCITY,2));
 
