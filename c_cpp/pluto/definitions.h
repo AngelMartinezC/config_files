@@ -3,8 +3,8 @@
 #define  GEOMETRY                       CARTESIAN
 #define  BODY_FORCE                     VECTOR
 #define  COOLING                        NO
-#define  RECONSTRUCTION                 LINEAR
-#define  TIME_STEPPING                  RK2
+#define  RECONSTRUCTION                 PARABOLIC
+#define  TIME_STEPPING                  CHARACTERISTIC_TRACING
 #define  NTRACER                        0
 #define  PARTICLES                      NO
 #define  USER_DEF_PARAMETERS            0
@@ -13,7 +13,7 @@
 
 #define  EOS                            IDEAL
 #define  ENTROPY_SWITCH                 NO
-#define  DIVB_CONTROL                   EIGHT_WAVES
+#define  DIVB_CONTROL                   DIV_CLEANING
 #define  BACKGROUND_FIELD               NO
 #define  AMBIPOLAR_DIFFUSION            NO
 #define  RESISTIVITY                    NO
